@@ -1,0 +1,40 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id           String    @id @default(uuid())
+  name         String
+  email        String    @unique
+  password     String?
+  isVerified   Boolean   @default(false)
+  role         String    @default("UNASSIGNED")
+  otp          String?
+  image String? @db.Text
+  otpExpiresAt DateTime?
+  createdAt    DateTime  @default(now())
+  JobPost      JobPost[]
+}
+
+model JobPost {
+  id        String  @id @default(uuid())
+  title     String
+  details   String  @db.Text
+  location  String
+  salary    String
+  company   String
+  jobType   String
+  category  String
+  experience String
+  userId    String  // This is the foreign key
+  user      User    @relation(fields: [userId], references: [id], onDelete: Cascade) // Fix here
+  createdAt DateTime @default(now())
+
+  @@map("job_post")
+}
+

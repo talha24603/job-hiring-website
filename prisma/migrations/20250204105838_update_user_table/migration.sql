@@ -1,0 +1,5 @@
+-- AlterTable
+ALTER TABLE "User" ADD COLUMN     "Image" TEXT,
+ALTER COLUMN "password" DROP NOT NULL,
+ALTER COLUMN "otp" DROP NOT NULL,
+ALTER COLUMN "otpExpiresAt" DROP NOT NULL;
