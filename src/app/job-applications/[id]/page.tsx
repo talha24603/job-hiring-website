@@ -1,4 +1,5 @@
-import React, { useEffect, useState } from 'react';
+'use client'
+import React, { useState } from 'react';
 import { useParams } from 'next/navigation';
 import axios from 'axios';
 
@@ -29,7 +30,7 @@ export default async function Page() {
   //   const getApplications = async () => {
 
       try {
-             const { data } = await axios.get<Application[]>(`/api/job-applications/${params.id}`);
+             const { data } = await axios.get<Application[]>(`/api/job-applications/${params?.id}`);
              setApplications(data);
            } catch (error) {
              console.error("Error fetching applications:", error);
