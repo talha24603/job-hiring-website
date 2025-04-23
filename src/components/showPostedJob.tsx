@@ -1,7 +1,7 @@
-'use client';
-import React from 'react';
-import { useRouter } from 'next/navigation';
-import DOMPurify from 'dompurify';
+"use client";
+import React from "react";
+import { useRouter } from "next/navigation";
+import DOMPurify from "dompurify";
 
 interface JobPost {
   id: string;
@@ -16,8 +16,17 @@ interface JobPost {
   createdAt: Date | string;
 }
 
-export default function ShowPostedJob({ job }: any) {
+// Create a separate props interface
+interface ShowPostedJobProps {
+  job: JobPost | null;
+}
+
+export default function ShowPostedJob({ job }: ShowPostedJobProps) {
   const router = useRouter();
+
+  if (!job) {
+    return <div>Job not found</div>;
+  }
 
   // Sanitize the HTML to remove any malicious scripts
   const sanitizedDetails = DOMPurify.sanitize(job.details);
@@ -25,8 +34,8 @@ export default function ShowPostedJob({ job }: any) {
   return (
     <div className="container mx-auto px-4 py-8">
       {/* Back Button */}
-      <button 
-        onClick={() => router.back()} 
+      <button
+        onClick={() => router.back()}
         className="mb-4 text-blue-500 hover:underline"
       >
         &larr; Back to Listings
@@ -57,10 +66,7 @@ export default function ShowPostedJob({ job }: any) {
         <div className="border-t pt-6">
           <h2 className="text-2xl font-semibold text-gray-800 mb-4">Job Details</h2>
           {/* Render sanitized HTML here */}
-          <div
-            className="text-gray-700"
-            dangerouslySetInnerHTML={{ __html: sanitizedDetails }}
-          />
+          <div className="text-gray-700" dangerouslySetInnerHTML={{ __html: sanitizedDetails }} />
         </div>
 
         {/* Additional Info */}
@@ -75,6 +81,16 @@ export default function ShowPostedJob({ job }: any) {
             <strong className="text-gray-800">Posted on:</strong>{" "}
             {new Date(job.createdAt).toLocaleDateString()}
           </div>
+        </div>
+
+        {/* View Applications Button */}
+        <div className="mt-6 flex justify-center">
+          <button
+            onClick={() => router.push(`/job-applications/${job.id}`)}
+            className="px-6 py-3 bg-blue-600 text-white font-semibold rounded-lg shadow-md hover:bg-blue-700 transition"
+          >
+            View Applications
+          </button>
         </div>
       </div>
     </div>

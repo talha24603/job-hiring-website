@@ -8,33 +8,117 @@ datasource db {
 }
 
 model User {
-  id           String    @id @default(uuid())
-  name         String
-  email        String    @unique
-  password     String?
-  isVerified   Boolean   @default(false)
-  role         String    @default("UNASSIGNED")
-  otp          String?
-  image String? @db.Text
-  otpExpiresAt DateTime?
-  createdAt    DateTime  @default(now())
-  JobPost      JobPost[]
+  id              String            @id @default(uuid())
+  name            String
+  email           String            @unique
+  password        String?
+  isVerified      Boolean           @default(false)
+  role            String            @default("UNASSIGNED")
+  otp             String?
+  image           String?           @db.Text
+  otpExpiresAt    DateTime?
+  createdAt       DateTime          @default(now())
+  JobPost         JobPost[]
+  provider        String?
+  EmployeeProfile EmployeeProfile[]
+}
+
+model EmployeeProfile {
+  id            String   @id @default(uuid())
+  name          String
+  email         String   @unique
+  phone         String?
+  skills        String?
+  education     String?
+  linkedin      String?
+  github        String?
+  profilePicUrl String?
+  resumeUrl     String?
+  createdAt     DateTime @default(now())
+  userId        String
+  user          User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  // Relation to JobPost: Employee can apply to many jobs
+  appliedJobs    JobPost[]        @relation("JobApplications")
+  JobApplication JobApplication[]
 }
 
 model JobPost {
-  id        String  @id @default(uuid())
-  title     String
-  details   String  @db.Text
-  location  String
-  salary    String
-  company   String
-  jobType   String
-  category  String
+  id         String   @id @default(uuid())
+  title      String
+  details    String   @db.Text
+  location   String
+  salary     String
+  company    String
+  jobType    String
+  category   String
   experience String
-  userId    String  // This is the foreign key
-  user      User    @relation(fields: [userId], references: [id], onDelete: Cascade) // Fix here
-  createdAt DateTime @default(now())
+  userId     String
+  user       User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  createdAt  DateTime @default(now())
+
+  // Relation to EmployeeProfile: Job can have many applicants
+  applicants     EmployeeProfile[] @relation("JobApplications")
+  JobApplication JobApplication[]
 
   @@map("job_post")
 }
 
+// model Documents {
+//   id String @id @default(uuid())
+
+//   createdAt DateTime @default(now())
+//   updatedAt DateTime @updatedAt
+
+//   // Required documents
+//   resumeUrl   String
+//   identityUrl String
+
+//   // Optional documents
+//   coverLetterUrl  String?
+//   educationUrl    String?
+//   experienceUrl   String?
+//   certificatesUrl String?
+//   portfolioUrl    String?
+// }
+
+// model EmployeeProfile {
+//   id              String   @id @default(uuid())
+//   name            String
+//   email           String   @unique
+//   phone           String?
+//   skills          String?
+//   education       String?
+//   linkedin        String?
+//   github          String?
+//   profilePicUrl   String?
+//   resumeUrl       String?
+//   createdAt       DateTime @default(now())
+// }
+// model CandidateApplication {
+//   id            String   @id @default(uuid())
+//   name          String
+//   email         String   @unique
+//   phone         String?
+//   skills        String?
+//   education     String?
+//   linkedin      String?
+//   github        String?
+//   profilePicUrl String?
+//   resumeUrl     String?
+//   createdAt     DateTime @default(now())
+//   jobPost       JobPost  @relation(fields: [jobPostId], references: [id], onDelete: Cascade)
+//   jobPostId     String
+//}
+
+model JobApplication {
+  id                String   @id @default(uuid())
+  appliedAt         DateTime @default(now())
+  employeeProfileId String
+  jobPostId         String
+
+  employeeProfile EmployeeProfile @relation(fields: [employeeProfileId], references: [id])
+  jobPost         JobPost         @relation(fields: [jobPostId], references: [id])
+
+  @@unique([employeeProfileId, jobPostId])
+}

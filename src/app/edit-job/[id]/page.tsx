@@ -2,6 +2,9 @@
 
 import prisma from "@/prismaClient";
 import JobPostForm from "../../post-job/page"; // static import
+import { useSession } from "next-auth/react";
+import Navbar from "@/components/navbar/NavBarComponent";
+import { auth } from "@/auth";
 
 interface PageProps {
   params: {
@@ -11,7 +14,8 @@ interface PageProps {
 
 export default async function JobPostPage({ params }: PageProps) {
   const { id } = params;
-
+const session =  await auth();
+  const user = session?.user
   // Perform your server-side data fetching here (e.g., using Prisma)
   const dataToEdit = await prisma.jobPost.findUnique({
     where: { id },
@@ -28,5 +32,8 @@ export default async function JobPostPage({ params }: PageProps) {
     },
   });
 
-  return <JobPostForm dataToEdit={dataToEdit || undefined} />;
+  return <>
+  <Navbar user = {user}/>
+  <JobPostForm dataToEdit={dataToEdit || undefined} />
+  </>
 }

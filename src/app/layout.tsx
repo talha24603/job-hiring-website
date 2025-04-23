@@ -3,6 +3,12 @@ import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import { Toaster } from "sonner";
 import AuthProvider from "@/context/authprovider";
+import { SocketProvider } from "../context/socket";
+import Footer from "@/components/Footer";
+import NavBar from "@/components/navbar/navbarServer";
+
+// const session = await auth()
+// const user = session?.user
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -27,12 +33,22 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
-        >
+        className={`${geistSans.variable} ${geistMono.variable} antialiased min-h-screen`}
+      >
         <AuthProvider>
-        {children}
-        <Toaster/>
-    </AuthProvider>
+          <SocketProvider>
+            <NavBar  />
+            
+            {/* 👇 Add a wrapper with top padding */}
+            <main className="pt-[72px]"> {/* Adjust if your navbar height is different */}
+              {children}
+            </main>
+
+            <Footer />
+          </SocketProvider>
+
+          <Toaster />
+        </AuthProvider>
       </body>
     </html>
   );

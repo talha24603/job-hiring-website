@@ -1,5 +1,4 @@
 'use client'
-import Navbar from "@/components/navbar/NavBar";
 import Footer from "@/components/Footer";
 import Image from "next/image";
 import Link from "next/link";
@@ -7,8 +6,7 @@ import Link from "next/link";
 export default function LandingPage() {
   return (
     <>
-      <Navbar />
-      <div className="min-h-screen bg-gray-100 text-gray-900">
+      <div className=" min-h-screen bg-gray-100 text-gray-900">
 
         {/* Hero Banner */}
         <section className="relative w-full h-[500px] flex items-center justify-center text-center text-white">

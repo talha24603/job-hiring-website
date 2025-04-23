@@ -4,28 +4,33 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import codeVerificationHandler from "./codeVerificationHandler";
-import { useParams, useRouter, useSearchParams } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { toast } from "sonner";
 
-export default  function VerifyCode() {
+export default function VerifyCode() {
   const [code, setCode] = useState("");
-  const searchParams = useSearchParams()
-  const router = useRouter()
-  const handleVerify = async (e:any) => {
-    e.preventDefault();
-    const email = searchParams.get("email") as string;
-    const formData = new FormData();
-    console.log("Verification Code:", code);
-    // const verifyCode = formData.get("code") as string
-    const response = await codeVerificationHandler(code,email)
-    if (response?.success) {
-        router.push('/')
+  const searchParams = useSearchParams();
+  const router = useRouter();
 
-  }
-  else if (!response?.success) {
-    toast.error("code doesn't match")
-  }
-}
+  const handleVerify = async (e: any) => {
+    e.preventDefault();
+
+    // Check if searchParams is not null
+    const email = searchParams?.get("email");
+    if (!email) {
+      toast.error("Email parameter is missing.");
+      return;
+    }
+
+    console.log("Verification Code:", code);
+    const response = await codeVerificationHandler(code, email);
+
+    if (response?.success) {
+      router.push("/");
+    } else {
+      toast.error("Code doesn't match");
+    }
+  };
 
   return (
     <div className="flex justify-center min-h-screen">

@@ -70,8 +70,8 @@ callbacks: {
                                 name: name as string,
                                 email: email as string,
                                 isVerified: true,
-                               
-                                image:image
+                                image:image,
+                                provider:'google'
                                 
                                 },
                                 })

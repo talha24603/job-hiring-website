@@ -1,5 +1,5 @@
 'use client'
-import Navbar from "@/components/navbar/NavBar";
+import Navbar from "@/components/navbar/NavBarComponent";
 import Footer from "@/components/Footer";
 import Image from "next/image";
 
