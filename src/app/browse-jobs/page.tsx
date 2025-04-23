@@ -103,7 +103,7 @@ export default function BrowseJobsPage({
 
   // Handle pagination
   const handlePageChange = (page: number) => {
-    const params = new URLSearchParams(queryParams.toString())
+    const params = new URLSearchParams(queryParams?.toString())
     params.set("page", page.toString())
     router.push(`/browse-jobs?${params.toString()}`)
 
@@ -116,6 +116,7 @@ export default function BrowseJobsPage({
     setSalaryRange([0, 200000])
     router.push("/browse-jobs")
   }
+
 
   // Format date
   const formatDate = (date: Date) => {
@@ -631,6 +632,7 @@ export default function BrowseJobsPage({
       </div>
     </div>
   )
+}
 }
 
 interface JobCardProps {
