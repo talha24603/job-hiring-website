@@ -106,7 +106,7 @@ export default function BrowseJobsPage({
     const params = new URLSearchParams(queryParams?.toString())
     params.set("page", page.toString())
     router.push(`/browse-jobs?${params.toString()}`)
-
+  }
   // Handle filter reset
   const resetFilters = () => {
     setSearch("")
@@ -633,7 +633,7 @@ export default function BrowseJobsPage({
     </div>
   )
 }
-}
+
 
 interface JobCardProps {
   job: JobPost
