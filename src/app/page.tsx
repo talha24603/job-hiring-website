@@ -1,5 +1,4 @@
 import Link from "next/link"
-import { auth } from "@/auth"
 import Image from "next/image"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
@@ -83,7 +82,7 @@ export default async function Home() {
             <div className="md:w-1/2 relative">
               <div className="relative h-[400px] w-full">
                 <Image
-                  src="/images"
+                  src="/images/landing-hero.jpg"
                   alt="Job seekers"
                   fill
                   className="object-contain"

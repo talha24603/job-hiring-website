@@ -1,7 +1,20 @@
-'use client';
+
+'use client'
 import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import createDOMPurify from 'dompurify';
+import {
+  Dialog,
+  DialogTrigger,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogDescription,
+  DialogFooter,
+} from '@/components/ui/dialog';
+import { Button } from '@/components/ui/button';
+import axios from 'axios';
+import { toast } from 'sonner';
 
 interface JobUser {
   image?: string | null;
@@ -28,6 +41,22 @@ interface ShowPostedJobProps {
 export default function ApplyJob({ job }: ShowPostedJobProps) {
   const router = useRouter();
   const [sanitizedDetails, setSanitizedDetails] = useState('');
+  const [confirmOpen, setConfirmOpen] = useState(false);
+
+  const handleApplyJob = async (job: JobPost) => {
+    try {
+      const response = await axios.post('/api/apply-job', { jobId: job.id });
+      toast.success(response.data.message || 'Application submitted successfully!');
+    } catch (error: any) {
+      if (error.response && error.response.status === 401) {
+        toast.error('Please sign in to apply for jobs');
+        router.push('/login');
+        return;
+      }
+      const backendMessage = error.response?.data?.message || error.message || 'Unknown error';
+      toast.error(`Error applying for job: ${backendMessage}`);
+    }
+  };
 
   useEffect(() => {
     if (job && typeof window !== 'undefined') {
@@ -40,7 +69,6 @@ export default function ApplyJob({ job }: ShowPostedJobProps) {
     return <div>Job not found</div>;
   }
 
-  // Use the user's image if available; otherwise, fall back to a default image
   const imageSrc = job.user?.image ? job.user.image : '/default-image.png';
 
   return (
@@ -49,9 +77,9 @@ export default function ApplyJob({ job }: ShowPostedJobProps) {
         {/* Header Section */}
         <div className="bg-gray-200 p-6 flex flex-col md:flex-row justify-between items-center border-b border-gray-300">
           <div className="flex items-center space-x-4">
-            <img 
-              src={imageSrc} 
-              alt={`${job.company} logo`} 
+            <img
+              src={imageSrc}
+              alt={`${job.company} logo`}
               className="w-16 h-16 object-cover rounded-full"
             />
             <div>
@@ -60,20 +88,46 @@ export default function ApplyJob({ job }: ShowPostedJobProps) {
               <p className="text-gray-600">{job.location}</p>
             </div>
           </div>
-          <button 
-            onClick={() => router.push(`/apply-job-form/${job.id}`)}
-            className="mt-4 md:mt-0 py-2 px-6 bg-green-600 text-white rounded-full hover:bg-green-700 transition"
-          >
-            Apply Now
-          </button>
+
+          {/* Confirm-Apply Dialog */}
+          <Dialog open={confirmOpen} onOpenChange={setConfirmOpen}>
+            <DialogTrigger asChild>
+              <Button
+                onClick={() => setConfirmOpen(true)}
+                className="mt-4 md:mt-0 py-2 px-6 bg-green-600 text-white rounded-full hover:bg-green-700 transition"
+              >
+                Apply Now
+              </Button>
+            </DialogTrigger>
+            <DialogContent>
+              <DialogHeader>
+                <DialogTitle>Confirm Application</DialogTitle>
+                <DialogDescription>
+                  Are you sure you want to apply for <strong>{job.title}</strong> at{' '}
+                  <strong>{job.company}</strong>?
+                </DialogDescription>
+              </DialogHeader>
+              <DialogFooter>
+                <Button variant="outline" onClick={() => setConfirmOpen(false)}>
+                  Cancel
+                </Button>
+                <Button
+                  onClick={() => {
+                    setConfirmOpen(false);
+                    handleApplyJob(job);
+                  }}
+                >
+                  Confirm
+                </Button>
+              </DialogFooter>
+            </DialogContent>
+          </Dialog>
         </div>
 
         {/* Salary and Job Type */}
         <div className="px-6 py-4 border-b">
           <div className="flex flex-col md:flex-row justify-between items-center">
-            <div className="text-gray-700 font-semibold text-xl">
-              ${job.salary}
-            </div>
+            <div className="text-gray-700 font-semibold text-xl">${job.salary}</div>
             <div>
               <span className="px-4 py-1 bg-blue-100 text-blue-800 rounded-full text-sm">
                 {job.jobType}
@@ -108,3 +162,4 @@ export default function ApplyJob({ job }: ShowPostedJobProps) {
     </div>
   );
 }
+

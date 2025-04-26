@@ -42,7 +42,7 @@ export async function POST(request: NextRequest) {
         const uploadStream = cloudinary.uploader.upload_stream(
           {
             folder: "next-cloudinary-uploads",
-            resource_type: "auto",
+            resource_type: "raw",
           },
           (error, result) => {
             if (error) {

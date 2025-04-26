@@ -55,10 +55,12 @@ export async function middleware(request: NextRequest) {
       url.pathname === '/select-role' ||
       url.pathname === '/post-job' ||
       url.pathname === '/employer-profile' ||
+      url.pathname === '/edit-profile' ||
       url.pathname.startsWith('/apply-job-form') ||
       url.pathname.startsWith('/posted-job') ||
       url.pathname.startsWith('/edit-job') ||
       url.pathname.startsWith('/job-applications')
+
     )
   ) {
     return NextResponse.redirect(new URL('/login', request.url));
@@ -85,5 +87,6 @@ export const config = {
     '/edit-job/:path*',
     '/about-us',
     '/job-applications/:path*',
+    '/view-application/:path*',
   ],
 };

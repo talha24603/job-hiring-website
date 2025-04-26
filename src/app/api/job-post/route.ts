@@ -1,6 +1,7 @@
 'use server';
 
 import prisma from "@/prismaClient";
+import { NextResponse } from "next/server";
 
 export async function POST(req: Request) {
   try {
@@ -17,7 +18,9 @@ export async function POST(req: Request) {
       companyName,
     } = await req.json();
     console.log(userId, jobTitle, experience, salary, category, jobType, address, details, companyName);
-
+    if (!userId || !jobTitle || !companyName || !address || !salary || !experience || !jobType || !category || !details) {
+      return NextResponse.json({ message: "Missing required fields." }, { status: 400 });
+    }
     let job_post;
     if (id) {
       // Update existing job post if an id is provided
@@ -50,7 +53,7 @@ export async function POST(req: Request) {
         },
       });
     }
-    return new Response(JSON.stringify({ job_post }), { status: 201 });
+    return new Response(JSON.stringify({ job_post }), { status: 200 });
   } catch (error) {
     console.error(error);
     return new Response(JSON.stringify({ error: "something went wrong" }), { status: 500 });

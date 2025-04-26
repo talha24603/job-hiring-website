@@ -33,7 +33,7 @@ export async function POST(request: NextRequest) {
     { field: 'skills', label: 'Skills' },
     { field: 'education', label: 'Education' },
     
-    { field: 'profilePicUrl', label: 'Profile Picture URL' },
+    // { field: 'profilePicUrl', label: 'Profile Picture URL' },
     { field: 'resumeUrl', label: 'Resume URL' },
   ];
 

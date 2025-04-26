@@ -60,12 +60,13 @@ export default function EmployerProfilePage({
   postedJobs = [],
   applications = [],
 }: EmployerProfileProps) {
+  const router = useRouter();
+
   const [open, setOpen] = useState(false);
   const [jobs, setJobs] = useState<JobPost[]>(postedJobs);
   const [app, setApp] = useState<Application[]>(applications);
   const [deleteJobId, setDeleteJobId] = useState("");
   const [openDelete, setOpenDelete] = useState(false);
-  const router = useRouter();
 
   return (
     <div className="w-full flex flex-col md:flex-row min-h-screen bg-gray-50">
@@ -108,8 +109,8 @@ export default function EmployerProfilePage({
 
           {/* User Info */}
           <div className="flex flex-col items-center md:items-start gap-2 w-full">
-            <div className="flex items-center gap-2">
-              <h1 className="text-2xl font-bold text-gray-800">{user.name}</h1>
+            <div className="flex items-center gap-2 break-words">
+              <h1 className="text-2xl font-bold text-gray-800 break-words">{user.name}</h1>
               {user.isVerified && (
                 <Badge
                   variant="outline"
@@ -120,7 +121,7 @@ export default function EmployerProfilePage({
               )}
             </div>
             <p className="text-gray-600">{user.email}</p>
-            <Button
+            {/* <Button
               variant="outline"
               size="sm"
               className="mt-2 gap-2"
@@ -128,7 +129,7 @@ export default function EmployerProfilePage({
             >
               <Pencil size={14} />
               Edit Profile
-            </Button>
+            </Button> */}
           </div>
 
           {/* Stats */}
@@ -337,6 +338,7 @@ interface ApplicationCardProps {
 
 // In ApplicationCard component:
 function ApplicationCard({ application, index }: { application: Application; index: number }) {
+  const router = useRouter(); 
   return (
     <Card className="bg-white shadow hover:shadow-md transition fade-up"
           style={{ animationDelay: `${index * 0.05}s` }}>
@@ -346,7 +348,7 @@ function ApplicationCard({ application, index }: { application: Application; ind
       </CardHeader>
       <CardContent>
         <div className="flex gap-2">
-          <Button variant="outline" size="sm" className="text-xs">
+          <Button variant="outline" size="sm" className="text-xs" onClick={() => router.push(`/view-application/${application.employeeProfile.id}`)}>
             View Resume
           </Button>
           <Button variant="outline" size="sm" className="text-xs">

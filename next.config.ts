@@ -1,10 +1,9 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
-  /* config options here */
+  // 1. Your image domains / remote patterns
   images: {
-    domains: ['res.cloudinary.com'],
-
+    domains: ["res.cloudinary.com"],
     remotePatterns: [
       {
         protocol: "https",
@@ -12,10 +11,20 @@ const nextConfig: NextConfig = {
       },
     ],
   },
-};
-module.exports = {
+
+  // 2. ESLint: ignore errors during production builds
   eslint: {
     ignoreDuringBuilds: true,
+  },
+
+  // 3. Extend Webpack to load .node binaries as raw
+  webpack: (config, { isServer }) => {
+    config.module.rules.push({
+      test: /\.node$/,
+      use: "raw-loader",
+    });
+
+    return config;
   },
 };
 

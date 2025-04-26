@@ -34,6 +34,7 @@ import {
   Save,
   FileText,
 } from "lucide-react";
+import axios from "axios";
 
 // Dynamically import the JoditEditor with SSR disabled
 const JoditEditor = dynamic(() => import("jodit-react"), { ssr: false });
@@ -118,20 +119,17 @@ export default function JobPostForm({ dataToEdit }: JobPostFormProps) {
       details,
       companyName,
     };
+    console.log("jobData:", jobData);
 
     try {
-      const response = await fetch("/api/job-post", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(jobData),
-      });
+      const response = await axios.post("/api/job-post", jobData);
 
-      if (response.ok) {
+
+      if (response.status === 200) {
         toast.success(dataToEdit ? "Job updated successfully!" : "Job posted successfully!");
         router.push("/employer-profile");
       } else {
-        const errorData = await response.json();
-        toast.error(errorData.message || "Failed to save job posting");
+        toast.error(response.data?.message || "Failed to save job posting");
       }
     } catch (error) {
       console.error("Error:", error);
