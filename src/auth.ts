@@ -14,7 +14,7 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
         sameSite: "none",
         path: "/",
         secure: true,
-        domain: process.env.NEXT_PUBLIC_APP_URL,  // ← replace with your real domain
+        domain: process.env.DOMAIN,  // ← replace with your real domain
       },
     },
     csrfToken: {
@@ -24,7 +24,7 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
         sameSite: "none",
         path: "/",
         secure: true,
-        domain: process.env.NEXT_PUBLIC_APP_URL,
+        domain: process.env.DOMAIN,
       },
     },
     callbackUrl: {
@@ -33,7 +33,7 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
         sameSite: "none",
         path: "/",
         secure: true,
-        domain: process.env.NEXT_PUBLIC_APP_URL,
+        domain: process.env.DOMAIN,
       },
     },
     state: {
@@ -95,16 +95,24 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
       }
       return true  // allow credentials sign-in
     },
-    jwt: async ({ user, token }) => {
+    async jwt({ token, user }) {
+      // Initial sign-in: `user` is present
       if (user) {
-        token.id = user.id
-        token.name = user.name
-        token.email = user.email
-        token.role = user.role
-        token.isVerified = user.isVerified
-        token.image = user.image
+        // If credentials provider, profile already has role/isVerified
+        // If Google provider, profile has no role → fetch from DB
+        const dbUser = await prisma.user.findUnique({
+          where: { email: user.email! },
+        });
+        if (dbUser) {
+          token.id         = dbUser.id;
+          token.name       = dbUser.name;
+          token.email      = dbUser.email;
+          token.role       = dbUser.role;       // now "UNASSIGNED" or whatever
+          token.isVerified = dbUser.isVerified;
+          token.image      = dbUser.image;
+        }
       }
-      return token
+      return token;
     },
     session: async ({ session, token }) => {
       session.user = {
