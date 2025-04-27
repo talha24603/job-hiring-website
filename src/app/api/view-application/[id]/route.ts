@@ -1,16 +1,18 @@
 // File: src/app/api/employee/[id]/route.ts
-import { NextResponse } from 'next/server'
+import { NextRequest, NextResponse } from 'next/server'
 import { PrismaClient } from '@prisma/client'
 
 const prisma = new PrismaClient()
 
 export async function GET(
-  request: Request,
-  { params }: { params: { id: string } }
-) {
-  const { id } = params
+  request: NextRequest,
+  { params }: { params: Promise<{ id: string }> }
+): Promise<NextResponse> {
+  // 1) Unwrap the params promise
+  const { id } = await params
 
   try {
+    // 2) Await your Prisma query
     const profile = await prisma.employeeProfile.findUnique({
       where: { id },
       select: {
@@ -28,6 +30,7 @@ export async function GET(
       },
     })
 
+    // 3) Handle not-found
     if (!profile) {
       return NextResponse.json(
         { error: 'Profile not found' },
@@ -35,6 +38,7 @@ export async function GET(
       )
     }
 
+    // 4) Return the result
     return NextResponse.json(profile)
   } catch (err) {
     console.error('Error fetching employee profile:', err)

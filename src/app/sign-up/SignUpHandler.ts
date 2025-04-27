@@ -1,40 +1,49 @@
 'use server'
 import prisma from '@/prismaClient';
-import {hash}  from 'bcryptjs';
-import React from 'react'
-import { POST } from '../api/resend/route';
+import { hash } from 'bcryptjs';
 
-export default async function SignUpHandler(formData:FormData) {
-    console.log("Form Data:", Object.fromEntries(formData.entries()));
-    const alreadyEmail = await prisma.user.findUnique({
-        where: {
-            email: formData.get("email") as string,
-            },
+export default async function SignUpHandler(formData: FormData) {
+  const email = formData.get('email') as string;
+  const password = formData.get('password') as string;
+  // … validation, duplicate-email check, OTP generation …
+  const alreadyEmail = await prisma.user.findUnique({
+    where: {
+        email: formData.get("email") as string,
+        },
 
-    })
-    if (alreadyEmail) {
-        return {alreadyIsAlready:"Already has email"}
+})
+if (alreadyEmail) {
+    return {alreadyIsAlready:"Already has email"}
+}
+  const otp = Math.floor(Math.random() * 900000 + 100000).toString();
+  const otpExpiry = new Date(Date.now() + 3600000);
+  
+  // 1️⃣ Call your resend route properly:
+  const res = await fetch(
+    new URL('/api/resend', process.env.NEXT_PUBLIC_APP_URL), // or use request.url if you have it
+    {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ email, verifyCode: otp }),
     }
-    const otp = Math.floor(Math.random() * 900000 + 100000).toString()
-    const email = formData.get("email") as string
-    const password = formData.get("password") as string
-    const hasedPassword = await hash(password,10)
-    const otpExpiry = new Date(Date.now() + 3600000)
-    const sendEmail = await POST(email,otp)
-    if (sendEmail) {
-         await prisma.user.create({
-            data: {
-                name:formData.get("email") as string,
+  );
+  if (!res.ok) {
+    // handle error…
+    return { error: 'Failed to send verification email' };
+  }
 
-                email: email,
-                password:hasedPassword,
-                otp: otp,
-                role:formData.get("role") as string,
-                otpExpiresAt: otpExpiry
-                },
-        })
-        
-            return {redirectUrl: `verifyCode?email=${encodeURIComponent(email)}`};
-        
-    }
+  // 2️⃣ Only create user after email sent
+  const hashedPassword = await hash(password, 10);
+  await prisma.user.create({
+    data: {
+      name: email,
+      email,
+      password: hashedPassword,
+      otp,
+      otpExpiresAt: otpExpiry,
+      role: formData.get('role') as string,
+    },
+  });
+
+  return { redirectUrl: `verifyCode?email=${encodeURIComponent(email)}` };
 }

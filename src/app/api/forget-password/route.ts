@@ -3,6 +3,7 @@
 
 import prisma from '@/prismaClient';
 import { POST as emailPost } from '../resend/route';
+import axios from 'axios';
 
 export async function POST(request: Request) {
   try {
@@ -27,8 +28,15 @@ export async function POST(request: Request) {
     console.log(`Sending OTP ${otp} to ${email}`);
 
     // Send the email via Resend
-    const sendEmail = await emailPost(email, otp);
-    console.log("Resend response:", sendEmail);
+    const resendRes = await fetch(
+      new URL('/api/resend', request.url),
+      {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email, verifyCode: otp }),
+      }
+    );
+    const sendEmail = await resendRes.json();    console.log("Resend response:", sendEmail);
     
     if (sendEmail) {
       try {

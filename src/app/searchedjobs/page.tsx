@@ -1,29 +1,41 @@
 // app/jobs/page.tsx
 
 import SearchedJobs from '@/components/SearchedJobs';
-import axios from 'axios';
+
+interface Job {
+  id: string;
+  title: string;
+  company: string;
+  salary: string;
+  createdAt: string;
+  experience: string;
+  jobType: string;
+}
 
 interface JobsPageProps {
-  searchParams: { [key: string]: string | string[] | undefined };
+  // searchParams is now a Promise
+  searchParams: Promise<{
+    search?: string;
+  }>;
 }
 
 export default async function JobsPage({ searchParams }: JobsPageProps) {
-  // Access the query directly from searchParams
-  const searchQuery = (searchParams.search as string) || "";
+  // 1️⃣ unwrap the promise
+  const { search } = await searchParams;
 
-  let searchedjobs = null;
-  try {
-    const response = await axios.get("http://localhost:3000/api/search-jobs", {
-      params: { q: searchQuery },
-    });
-    searchedjobs = response.data;
-  } catch (error) {
-    console.error("Error fetching jobs:", error);
-  }
+  // 2️⃣ normalize to a single string
+  const q = (search ?? '').trim();
 
-  return (
-    <>
-      <SearchedJobs jobs={searchedjobs} />
-    </>
-  );
+  // 3️⃣ fetch (or skip) based on query
+  const jobs: Job[] = q
+    ? await fetch(
+        `http://localhost:3000/api/search-jobs?q=${encodeURIComponent(q)}`,
+        { cache: 'no-store' }
+      ).then((res) => {
+        if (!res.ok) throw new Error(`Fetch failed: ${res.status}`);
+        return res.json() as Promise<Job[]>;
+      })
+    : [];
+
+  return <SearchedJobs jobs={jobs} />;
 }

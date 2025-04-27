@@ -3,8 +3,13 @@ import { PrismaClient } from "@prisma/client";
 
 const prisma = new PrismaClient();
 
-export async function GET(request: NextRequest, { params }: { params: { id: string } }) {
-  const jobId = params.id;
+export async function GET(
+  request: NextRequest,
+  { params }: { params: Promise<{ id: string }> }    // ← notice Promise<…>
+): Promise<NextResponse> {
+  // unwrap the promise
+  const { id: jobId } = await params;
+
   const jobDetail = await prisma.jobPost.findUnique({
     where: { id: jobId },
     select: {
@@ -21,7 +26,11 @@ export async function GET(request: NextRequest, { params }: { params: { id: stri
   });
 
   if (!jobDetail) {
-    return NextResponse.json({ error: "Job not found" }, { status: 404 });
+    return NextResponse.json(
+      { error: "Job not found" },
+      { status: 404 }
+    );
   }
+
   return NextResponse.json(jobDetail);
 }
