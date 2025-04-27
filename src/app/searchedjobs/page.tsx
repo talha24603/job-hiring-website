@@ -22,14 +22,14 @@ interface JobsPageProps {
 export default async function JobsPage({ searchParams }: JobsPageProps) {
   // 1️⃣ unwrap the promise
   const { search } = await searchParams;
+  let weburl = process.env.NEXT_PUBLIC_APP_URL;
 
   // 2️⃣ normalize to a single string
   const q = (search ?? '').trim();
-
   // 3️⃣ fetch (or skip) based on query
   const jobs: Job[] = q
     ? await fetch(
-        `http://localhost:3000/api/search-jobs?q=${encodeURIComponent(q)}`,
+        `${weburl}/api/search-jobs?q=${encodeURIComponent(q)}`,
         { cache: 'no-store' }
       ).then((res) => {
         if (!res.ok) throw new Error(`Fetch failed: ${res.status}`);

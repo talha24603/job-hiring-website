@@ -152,7 +152,7 @@ export default async function Home() {
       </section>
 
       {/* Job Categories Section */}
-      <section className="py-16 bg-gray-50">
+      {/* <section className="py-16 bg-gray-50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex flex-col md:flex-row md:items-center md:justify-between mb-12">
             <div>
@@ -205,10 +205,10 @@ export default async function Home() {
             </Link>
           </div>
         </div>
-      </section>
+      </section> */}
 
       {/* For Employers Section */}
-      <section className="py-16 bg-white">
+      {/* <section className="py-16 bg-white">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex flex-col md:flex-row items-center">
             <div className="md:w-1/2 md:pr-12 mb-10 md:mb-0">
@@ -253,10 +253,10 @@ export default async function Home() {
             </div>
           </div>
         </div>
-      </section>
+      </section> */}
 
       {/* Testimonials Section */}
-      <section className="py-16 bg-gray-50">
+      {/* <section className="py-16 bg-gray-50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-16">
             <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">What Our Users Say</h2>
@@ -295,10 +295,10 @@ export default async function Home() {
             ))}
           </div>
         </div>
-      </section>
+      </section> */}
 
       {/* Final CTA Section */}
-      <section className="py-20 bg-gradient-to-r from-green-600 to-green-800 text-white">
+      {/* <section className="py-20 bg-gradient-to-r from-green-600 to-green-800 text-white">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
           <h2 className="text-3xl md:text-4xl font-bold mb-6">Ready to Start Your Career Journey?</h2>
           <p className="text-lg md:text-xl mb-8 max-w-3xl mx-auto opacity-90">
@@ -314,7 +314,7 @@ export default async function Home() {
             </Button>
           </div>
         </div>
-      </section>
+      </section> */}
 
     </>
   )

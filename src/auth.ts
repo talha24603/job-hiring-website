@@ -1,150 +1,128 @@
+import NextAuth, { AuthError } from "next-auth"
 import CredentialProvider from "next-auth/providers/credentials"
 import GoogleProvider from "next-auth/providers/google"
-
 import prisma from "./prismaClient"
 import { compare } from "bcryptjs"
-import NextAuth ,{AuthError} from "next-auth"
-export const { handlers, signIn, signOut, auth } = NextAuth ({
+
+export const { handlers, signIn, signOut, auth } = NextAuth({
+  // ─── COOKIE CONFIG ────────────────────────────────────────────────────────────
+  cookies: process.env.NODE_ENV === "production" ? {
+    sessionToken: {
+      name: "__Secure-next-auth.session-token",
+      options: {
+        httpOnly: true,
+        sameSite: "none",
+        path: "/",
+        secure: true,
+        domain: process.env.NEXT_PUBLIC_APP_URL,  // ← replace with your real domain
+      },
+    },
+    csrfToken: {
+      name: "__Secure-next-auth.csrf-token",
+      options: {
+        httpOnly: false,
+        sameSite: "none",
+        path: "/",
+        secure: true,
+        domain: process.env.NEXT_PUBLIC_APP_URL,
+      },
+    },
+    callbackUrl: {
+      name: "__Secure-next-auth.callback-url",
+      options: {
+        sameSite: "none",
+        path: "/",
+        secure: true,
+        domain: process.env.NEXT_PUBLIC_APP_URL,
+      },
+    },
+    state: {
+      name: "__Secure-next-auth.state",
+      options: {
+        httpOnly: true,
+        sameSite: "none",
+        path: "/",
+        secure: true,
+        domain: process.env.NEXT_PUBLIC_APP_URL,
+      },
+    },
+  } : {},
+
+  // ─── PROVIDERS ────────────────────────────────────────────────────────────────
   providers: [
     GoogleProvider({
-        clientId: process.env.GOOGLE_CLIENT_ID as string, 
-        clientSecret: process.env.GOOGLE_CLIENT_SECRET as string
-      }),
+      clientId: process.env.GOOGLE_CLIENT_ID as string,
+      clientSecret: process.env.GOOGLE_CLIENT_SECRET as string,
+    }),
     CredentialProvider({
-    name: "Credentials",
-   
-    credentials: {
-      email: { label: "email", type: "email" },
-      password: { label: "Password", type: "password" }
-    },
+      name: "Credentials",
+      credentials: {
+        email: { label: "Email", type: "email" },
+        password: { label: "Password", type: "password" },
+      },
+      authorize: async (credentials: any) => {
+        const user = await prisma.user.findUnique({ where: { email: credentials.email } })
+        if (!user) throw new Error("invalid email or password")
+        const isMatch = await compare(credentials.password, user.password || "")
+        if (!isMatch) throw new Error("incorrect password")
+        return { id: user.id, name: user.name, email: user.email, isVerified: user.isVerified, role: user.role }
+      },
+    }),
+  ],
 
-     authorize: async(credentials:any)=> {
-        const email = credentials.email as string 
-        const password = credentials.password as string 
-      const user = await prisma.user.findUnique({
-        where: {
-            email : email 
-            },
+  // ─── CORE CONFIG ─────────────────────────────────────────────────────────────
+  secret: process.env.AUTH_SECRET,
+  debug: true,
+  session: { strategy: "jwt" },
+  pages: { signIn: "/login" },
 
-      })
-      if (!user) {
-        throw new Error("invalid email or password")
-      }
-      const isMatch = await compare(password,user.password || "")
-      if (!isMatch) {
-        throw new Error("incorrect password")
+  callbacks: {
+    signIn: async ({ user, account }) => {
+      if (account?.provider === "google") {
+        try {
+          const existing = await prisma.user.findUnique({ where: { email: user.email! } })
+          if (!existing) {
+            await prisma.user.create({
+              data: { 
+                id: user.id, name: user.name!, email: user.email!, image: user.image, isVerified: true, provider: "google" 
+              },
+            })
+          }
+          return true
+        } catch {
+          throw new AuthError("Error while creating user")
         }
-
-      if (user) {   
-        return {id:user.id,name:user.name,email:user.email,isVerified:user.isVerified,role:user.role}
-      } else {
-        return null
-
       }
-    }
-  })
-],
-secret: process.env.AUTH_SECRET,
-debug: true,
-
-session:{
-    strategy:'jwt',
-},
-pages:{
-    signIn:'/login',
-},
-callbacks: {
-    signIn: async ({user,account})=>{
-        if (account?.provider==="google") {
-            try {
-                const {id,name,email,image} = user;
-                const alreadyUser = await prisma.user.findUnique({
-                    where: {
-                        email: email as string
-                    },
-                    })
-                    if (!alreadyUser) {
-                         await prisma.user.create({
-                            data: {
-                                id: id,
-                                name: name as string,
-                                email: email as string,
-                                isVerified: true,
-                                image:image,
-                                provider:'google'
-                                
-                                },
-                                })
-                            }
-                           
-                            return true
-                  
-                    
-            } catch (error) {
-                throw new AuthError("Error while creating user")
-            }
-        }
-            if(account?.provider === "credentials"){
-                console.log("user signed with credentials: ", user);
-                return true
-            }
-            return false
+      return true  // allow credentials sign-in
     },
-     async jwt({ user, token }) {
-      // Persist the OAuth access_token to the token right after signin
-      console.log('authUser',user);
-
+    jwt: async ({ user, token }) => {
       if (user) {
-        token.id = user.id,
-        token.name = user.name,
-        token.email = user.email,
-        token.role = user.role 
-        token.isVerified = user.isVerified 
-        token.image=user.image
-        // if (!user.role && user.email) {
-        //   try {
-        //     const dbUser = await prisma.user.findUnique({
-        //       where: { email: user.email },
-        //       select: { role: true },
-        //     });
-        //     token.role = dbUser?.role || "UNASSIGNED";
-        //   } catch (error) {
-        //     console.error("Error fetching user role:", error);
-        //     token.role = "employee"; // fallback
-        //   }
-        // } else {
-        //   token.role = user.role;
-        // }
+        token.id = user.id
+        token.name = user.name
+        token.email = user.email
+        token.role = user.role
+        token.isVerified = user.isVerified
+        token.image = user.image
       }
-      console.log('authtoken',token);
       return token
     },
-
-    async session({ session, token }) {
-        if (token) {
-            session.user={
-            id : token.id as string ,
-            name : token.name as string,
-            email : token.email as string,
-            role :token.role as string,
-            isVerified:token.isVerified as boolean,
-            image:token.image as string,
-            emailVerified: null // Ensure this field is present
-            
-        }
-
-        }
-        console.log('authsession',session);
-        const user = await prisma.user.findUnique({
-      where: { email: session.user.email },
-    });
-    session.user.role = user?.role || session.user.role;
-    
-    // If you kept the field as "Image" in Prisma:
-    session.user.image = user?.image || session.user.image;
-    // session.user.role = user?.role || session.user.role;
+    session: async ({ session, token }) => {
+      session.user = {
+        id: token.id as string,
+        name: token.name as string,
+        email: token.email as string,
+        role: token.role as string,
+        isVerified: token.isVerified as boolean,
+        image: token.image as string,
+        emailVerified: null,
+      }
+      // Refresh role/image from database on every session call
+      const dbUser = await prisma.user.findUnique({ where: { email: session.user.email } })
+      if (dbUser) {
+        session.user.role = dbUser.role
+        session.user.image = dbUser.image as string
+      }
       return session
-    }
-  }
-}
-)
+    },
+  },
+})
