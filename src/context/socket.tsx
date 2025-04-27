@@ -21,7 +21,7 @@ export const useSocket = () => {
 export const SocketProvider = (props: { children: React.ReactNode }) => {
   let socket = useMemo(
     () =>
-      io('http://localhost:3000', {
+      io(process.env.NEXT_PUBLIC_APP_URL, {
         path: '/api/socket', // this must match the path defined in your API route
       }), 
     []
