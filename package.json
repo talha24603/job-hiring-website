@@ -12,6 +12,7 @@
     "postinstall": "npm run generate"
   },
   "dependencies": {
+    "@auth/prisma-adapter": "2.7.2",
     "@edgestore/react": "^0.3.2",
     "@edgestore/server": "^0.3.2",
     "@emotion/react": "^11.14.0",

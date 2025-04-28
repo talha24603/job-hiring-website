@@ -1,5 +1,6 @@
 import { NextResponse } from 'next/server';
 import type { NextRequest } from 'next/server';
+
 import { getToken } from 'next-auth/jwt';
 
 interface Token {
@@ -15,8 +16,8 @@ export async function middleware(request: NextRequest) {
   const url = request.nextUrl;
 
   // Redirect UNASSIGNED roles to select role
-  if (token && token.role === "UNASSIGNED") {
-    return NextResponse.redirect(new URL('/select-role', request.url));
+  if (token?.role === "UNASSIGNED" && url.pathname !== '/select-role') {
+    return NextResponse.redirect(new URL('/select-role', request.url))
   }
 
   // Prevent employers from accessing job application forms

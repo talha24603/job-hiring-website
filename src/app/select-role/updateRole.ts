@@ -1,29 +1,21 @@
-'use server';
-import { auth } from "@/auth"; // NextAuth setup
-import prisma from "@/prismaClient";
+import { NextResponse } from 'next/server';
+import { getToken } from 'next-auth/jwt';
+import prisma from '@/prismaClient';
 
-export async function updateRole(role: string) {
+export async function POST(req: Request) {
+  const { role } = await req.json();
+  const token = await getToken({ req, secret: process.env.AUTH_SECRET });
+  if (!token?.email) {
+    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  }
   try {
-    console.log("Attempting to update role to:", role);
-    const session = await auth(); // Get session
-    console.log("Session:", session);
-
-    if (!session || !session.user?.email) {
-      return { error: "Unauthorized", status: 401 };
-    }
-
-    const email = session.user.email;
-    
-    // Update the user's role and log the updated user
     const updatedUser = await prisma.user.update({
-      where: { email },
+      where: { email: token.email },
       data: { role },
     });
-    console.log("Updated user:", updatedUser);
-
-    return { message: "Role updated successfully", status: 200 };
-  } catch (error) {
-    console.error("Error updating role:", error);
-    return { error: "Internal Server Error", status: 500 };
+    return NextResponse.json({ message: "OK", user: updatedUser }, { status: 200 });
+  } catch (err) {
+    console.error(err);
+    return NextResponse.json({ error: "DB error" }, { status: 500 });
   }
 }

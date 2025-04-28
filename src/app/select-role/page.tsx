@@ -1,4 +1,5 @@
 'use client'
+import { signOut } from "next-auth/react"
 
 import { Button } from "@/components/ui/button";
 import {
@@ -8,27 +9,34 @@ import {
     CardHeader,
     CardTitle,
 } from "@/components/ui/card";
-import React, { useEffect, useState } from 'react';
+import React, {  useState } from 'react';
 import { useRouter } from "next/navigation";
-import { updateRole } from './updateRole';
+import axios from "axios";
+import { useSession } from "next-auth/react";
 
 export default function Page() {
    
-    
+    const {update: updateSession} = useSession()
     const [role, setRole] = useState("employee");
     const router = useRouter();
 
    
 
     const handleContinue = async () => {
-        
-    
-          const response = await updateRole(role)
-          if (response) {
-            router.push('/')
+        try {
+          // send the PATCH with axios
+          const res = await axios.patch('/api/update-role', { role })
+          if (res.status === 200) {
+            signOut() // sign out the user
+
+          } else {
+            console.error('Update failed:', res.data)
           }
-    };
-    
+        } catch (err: any) {
+          // axios wraps non-2xx responses as exceptions
+          console.error('Error updating role:', err.response?.data || err.message)
+        }
+      }
 
     return (
         <div className="flex justify-center min-h-screen items-center bg-[#E8F5E9]">

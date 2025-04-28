@@ -3,8 +3,9 @@ import CredentialProvider from "next-auth/providers/credentials"
 import GoogleProvider from "next-auth/providers/google"
 import prisma from "./prismaClient"
 import { compare } from "bcryptjs"
-
 export const { handlers, signIn, signOut, auth } = NextAuth({
+  
+
   // ─── COOKIE CONFIG ────────────────────────────────────────────────────────────
   cookies: process.env.NODE_ENV === "production" ? {
     sessionToken: {
@@ -43,7 +44,7 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
         sameSite: "none",
         path: "/",
         secure: true,
-        domain: process.env.NEXT_PUBLIC_APP_URL,
+        domain: process.env.DOMAIN,
       },
     },
   } : {},
@@ -53,6 +54,8 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
     GoogleProvider({
       clientId: process.env.GOOGLE_CLIENT_ID as string,
       clientSecret: process.env.GOOGLE_CLIENT_SECRET as string,
+      allowDangerousEmailAccountLinking: true,
+
     }),
     CredentialProvider({
       name: "Credentials",
@@ -65,7 +68,7 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
         if (!user) throw new Error("invalid email or password")
         const isMatch = await compare(credentials.password, user.password || "")
         if (!isMatch) throw new Error("incorrect password")
-        return { id: user.id, name: user.name, email: user.email, isVerified: user.isVerified, role: user.role }
+        return {  name: user.name, email: user.email, isVerified: user.isVerified, role: user.role }
       },
     }),
   ],
@@ -84,7 +87,7 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
           if (!existing) {
             await prisma.user.create({
               data: { 
-                id: user.id, name: user.name!, email: user.email!, image: user.image, isVerified: true, provider: "google" 
+                 name: user.name!, email: user.email!, image: user.image, isVerified: true, provider: "google" 
               },
             })
           }

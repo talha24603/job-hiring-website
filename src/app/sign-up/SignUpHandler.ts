@@ -6,6 +6,7 @@ import axios from 'axios'
 export default async function SignUpHandler(formData: FormData) {
   const email = formData.get('email') as string
   const password = formData.get('password') as string
+  const name = formData.get('name') as string
 
   // … validation, duplicate-email check …
   const alreadyEmail = await prisma.user.findUnique({
@@ -42,7 +43,7 @@ export default async function SignUpHandler(formData: FormData) {
   const hashedPassword = await hash(password, 10)
   await prisma.user.create({
     data: {
-      name: email,
+      name,
       email,
       password: hashedPassword,
       otp,

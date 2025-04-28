@@ -1,32 +1,28 @@
+// app/api/update-role/route.ts
 import { NextRequest, NextResponse } from "next/server";
-import { auth } from "@/auth";
+import { auth } from "@/auth";            // NextAuth export
 import prisma from "@/prismaClient";
 
-export async function PATCH(
-  request: NextRequest
-): Promise<NextResponse> {
+export const dynamic = "force-dynamic";
+
+export async function PATCH(request: NextRequest) {
   try {
-    // 1) Get the session
+    // ← pass `request` here
     const session = await auth();
     if (!session?.user?.email) {
-      return NextResponse.json(
-        { error: "Unauthorized" },
-        { status: 401 }
-      );
+      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
-    // 2) Extract the new role from the request body
     const { role } = (await request.json()) as { role: string };
 
-    // 3) Update the user in the database
-    await prisma.user.update({
+    const updatedUser = await prisma.user.update({
       where: { email: session.user.email },
       data: { role },
     });
+    console.log("Role updated in DB:", updatedUser);
 
-    // 4) Return success
     return NextResponse.json(
-      { message: "Role updated successfully" },
+      { message: "Role updated successfully", user: updatedUser },
       { status: 200 }
     );
   } catch (error) {
