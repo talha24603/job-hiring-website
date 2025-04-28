@@ -2,6 +2,7 @@
   import type { NextRequest } from 'next/server';
 
   import { getToken } from 'next-auth/jwt';
+  import { auth } from './auth';
 
   interface Token {
     
@@ -13,6 +14,8 @@
   export async function middleware(request: NextRequest) {
     const secret = process.env.AUTH_SECRET;
     const token = (await getToken({ req: request, secret })) as Token | null;
+    // const session = await auth();
+    // const token = session?.user as { role?: string } | null; // Adjust the type according to your user object structure
     const url = request.nextUrl;
 
     // Redirect UNASSIGNED roles to select role

@@ -4,9 +4,11 @@ import NavbarComponent from "./NavBarComponent";
 export default async function NavBar() {
   const session = await auth();
   const user = session?.user;
+  console.log(user?.role);
 
   return (
     <div>
+      
       <NavbarComponent user={user} />
       
     </div>

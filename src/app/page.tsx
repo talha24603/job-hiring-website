@@ -3,6 +3,7 @@ import Image from "next/image"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
 import { ArrowRight, CheckCircle, Search, Users, TrendingUp, Star } from "lucide-react"
+import { auth } from "@/auth"
 
 const categories = [
   { title: "Frontend Developer", skills: "React, Vue, Angular, HTML, CSS, JavaScript" },
@@ -19,29 +20,7 @@ const categories = [
   { title: "Cloud Engineer", skills: "AWS, Azure, Google Cloud" },
 ]
 
-const testimonials = [
-  {
-    name: "Sarah Johnson",
-    role: "Frontend Developer",
-    company: "TechCorp",
-    image: "/placeholder.svg?height=80&width=80",
-    text: "CareerHub helped me find my dream job in just two weeks! The platform is intuitive and the job matches were spot-on for my skills.",
-  },
-  {
-    name: "Michael Chen",
-    role: "DevOps Engineer",
-    company: "CloudSystems",
-    image: "/placeholder.svg?height=80&width=80",
-    text: "As someone looking to switch careers, CareerHub provided valuable resources and connections that made my transition smooth and successful.",
-  },
-  {
-    name: "Jessica Williams",
-    role: "HR Director",
-    company: "InnovateTech",
-    image: "/placeholder.svg?height=80&width=80",
-    text: "From an employer perspective, CareerHub delivers high-quality candidates that match our requirements perfectly. It's streamlined our hiring process.",
-  },
-]
+
 
 const stats = [
   { value: "10K+", label: "Job Listings" },
@@ -51,7 +30,9 @@ const stats = [
 ]
 
 export default async function Home() {
- 
+  const session = await auth()
+  const user = session?.user
+  console.log(user?.role)
   return (
     <>
 
