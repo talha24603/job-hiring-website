@@ -6,47 +6,47 @@ import { compare } from "bcryptjs"
 export const { handlers, signIn, signOut, auth } = NextAuth({
   
 
-  // cookies: process.env.NODE_ENV === "production" ? {
-  //   sessionToken: {
-  //     name: "__Secure-next-auth.session-token",
-  //     options: {
-  //       httpOnly: true,
-  //       sameSite: "none",
-  //       path: "/",
-  //       secure: true,
-  //       domain: process.env.DOMAIN,  
-  //     },
-  //   },
-  //   csrfToken: {
-  //     name: "__Secure-next-auth.csrf-token",
-  //     options: {
-  //       httpOnly: false,
-  //       sameSite: "none",
-  //       path: "/",
-  //       secure: true,
-  //       domain: process.env.DOMAIN,
-  //     },
-  //   },
-  //   callbackUrl: {
-  //     name: "__Secure-next-auth.callback-url",
-  //     options: {
-  //       sameSite: "none",
-  //       path: "/",
-  //       secure: true,
-  //       domain: process.env.DOMAIN,
-  //     },
-  //   },
-  //   state: {
-  //     name: "__Secure-next-auth.state",
-  //     options: {
-  //       httpOnly: true,
-  //       sameSite: "none",
-  //       path: "/",
-  //       secure: true,
-  //       domain: process.env.DOMAIN,
-  //     },
-  //   },
-  // } : {},
+  cookies: process.env.NODE_ENV === "production" ? {
+    sessionToken: {
+      name: "__Secure-next-auth.session-token",
+      options: {
+        httpOnly: true,
+        sameSite: "none",
+        path: "/",
+        secure: true,
+        domain: process.env.DOMAIN,  
+      },
+    },
+    csrfToken: {
+      name: "__Secure-next-auth.csrf-token",
+      options: {
+        httpOnly: false,
+        sameSite: "none",
+        path: "/",
+        secure: true,
+        domain: process.env.DOMAIN,
+      },
+    },
+    callbackUrl: {
+      name: "__Secure-next-auth.callback-url",
+      options: {
+        sameSite: "none",
+        path: "/",
+        secure: true,
+        domain: process.env.DOMAIN,
+      },
+    },
+    state: {
+      name: "__Secure-next-auth.state",
+      options: {
+        httpOnly: true,
+        sameSite: "none",
+        path: "/",
+        secure: true,
+        domain: process.env.DOMAIN,
+      },
+    },
+  } : {},
 
   providers: [
     GoogleProvider({
