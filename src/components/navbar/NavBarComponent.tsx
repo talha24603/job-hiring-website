@@ -170,7 +170,7 @@ export default function NavbarComponent({ user }: { user?: any }) {
                 </NavigationMenuItem>
 
                 <NavigationMenuItem>
-                  <Link href="/pricing" legacyBehavior passHref>
+                  <Link href="/" legacyBehavior passHref>
                     <NavigationMenuLink
                       className={cn(
                         "group inline-flex h-10 w-max items-center justify-center rounded-md px-4 py-2 text-sm font-medium transition-colors hover:bg-green-50 hover:text-green-700 focus:bg-green-50 focus:text-green-700 focus:outline-none disabled:pointer-events-none disabled:opacity-50",
@@ -183,7 +183,7 @@ export default function NavbarComponent({ user }: { user?: any }) {
                 </NavigationMenuItem>
 
                 <NavigationMenuItem>
-                  <Link href="/about" legacyBehavior passHref>
+                  <Link href="/" legacyBehavior passHref>
                     <NavigationMenuLink
                       className={cn(
                         "group inline-flex h-10 w-max items-center justify-center rounded-md px-4 py-2 text-sm font-medium transition-colors hover:bg-green-50 hover:text-green-700 focus:bg-green-50 focus:text-green-700 focus:outline-none disabled:pointer-events-none disabled:opacity-50",
@@ -266,12 +266,12 @@ export default function NavbarComponent({ user }: { user?: any }) {
                     </Link>
                   </DropdownMenuItem>
                   <DropdownMenuItem>
-                    <Link href="/billing" className="flex w-full">
+                    <Link href="/" className="flex w-full">
                       Billing
                     </Link>
                   </DropdownMenuItem>
                   <DropdownMenuItem>
-                    <Link href="/team" className="flex w-full">
+                    <Link href="/" className="flex w-full">
                       Team
                     </Link>
                   </DropdownMenuItem>
@@ -423,7 +423,7 @@ function MobileSidebar({
           </div>
 
           <Link
-            href="/pricing"
+            href="/"
             className="flex items-center gap-3 px-3 py-2.5 rounded-md text-gray-700 hover:bg-green-50 hover:text-green-700 transition-colors"
             onClick={onClose}
           >
@@ -432,7 +432,7 @@ function MobileSidebar({
           </Link>
 
           <Link
-            href="/about"
+            href="/"
             className="flex items-center gap-3 px-3 py-2.5 rounded-md text-gray-700 hover:bg-green-50 hover:text-green-700 transition-colors"
             onClick={onClose}
           >
@@ -456,7 +456,7 @@ function MobileSidebar({
                 <span>Profile</span>
               </Link>
               <Link
-                href="/billing"
+                href="/"
                 className="flex items-center gap-3 px-3 py-2.5 rounded-md text-gray-700 hover:bg-green-50 hover:text-green-700 transition-colors"
                 onClick={onClose}
               >
@@ -464,7 +464,7 @@ function MobileSidebar({
                 <span>Billing</span>
               </Link>
               <Link
-                href="/team"
+                href="/"
                 className="flex items-center gap-3 px-3 py-2.5 rounded-md text-gray-700 hover:bg-green-50 hover:text-green-700 transition-colors"
                 onClick={onClose}
               >
