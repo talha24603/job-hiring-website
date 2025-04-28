@@ -2,23 +2,10 @@ import Link from "next/link"
 import Image from "next/image"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
-import { ArrowRight, CheckCircle, Search, Users, TrendingUp, Star } from "lucide-react"
+import { ArrowRight, Search, Users, TrendingUp } from "lucide-react"
 import { auth } from "@/auth"
 
-const categories = [
-  { title: "Frontend Developer", skills: "React, Vue, Angular, HTML, CSS, JavaScript" },
-  { title: "Backend Developer", skills: "Node.js, Django, Spring Boot, Ruby on Rails" },
-  { title: "Full Stack Developer", skills: "MERN, MEAN, LAMP Stack" },
-  { title: "Mobile App Developer", skills: "React Native, Flutter, Swift, Kotlin" },
-  { title: "DevOps Engineer", skills: "CI/CD, AWS, Docker, Kubernetes" },
-  { title: "Software Engineer", skills: "General software development roles" },
-  { title: "Game Developer", skills: "Unity, Unreal Engine, C#" },
-  { title: "AI/ML Engineer", skills: "TensorFlow, PyTorch, NLP, Data Science" },
-  { title: "Cybersecurity Engineer", skills: "Penetration Testing, Ethical Hacking" },
-  { title: "Data Engineer", skills: "Big Data, SQL, ETL Pipelines" },
-  { title: "Database Administrator", skills: "MongoDB, PostgreSQL, MySQL, Firebase" },
-  { title: "Cloud Engineer", skills: "AWS, Azure, Google Cloud" },
-]
+
 
 
 
