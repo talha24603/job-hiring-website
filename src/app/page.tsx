@@ -29,7 +29,7 @@ export default async function Home() {
           <div className="flex flex-col md:flex-row items-center">
             <div className="md:w-1/2 md:pr-8 mb-10 md:mb-0">
               <Badge className="mb-4 bg-green-100 text-green-800 hover:bg-green-200 px-3 py-1">
-                Your Career Journey Starts Here
+                Your Career Journey Starts Here {user?.role}
               </Badge>
               <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold text-gray-900 mb-6 leading-tight">
                 Find Your <span className="text-green-600">Dream Job</span> Today
