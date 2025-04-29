@@ -23,24 +23,7 @@ import { Button } from "@/components/ui/button"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet"
 import { Separator } from "@/components/ui/separator"
-import {
-  Search,
-  Bell,
-  Menu,
-  X,
-  Briefcase,
-  Building,
-  Code,
-  Brush,
-  ChevronDown,
-  Home,
-  TagIcon as PriceTag,
-  Info,
-  LogOut,
-  User,
-  CreditCard,
-  Users,
-} from "lucide-react"
+import { Search, Bell, Menu, X, Briefcase, Building, Code, Brush, ChevronDown, Home, TagIcon as PriceTag, Info, LogOut, User, CreditCard, Users, Globe } from 'lucide-react'
 import { cn } from "@/lib/utils"
 import SearchSheet from "../searchSheet"
 import { motion, AnimatePresence } from "framer-motion"
@@ -108,7 +91,7 @@ export default function NavbarComponent({ user }: { user?: any }) {
     <nav
       className={cn(
         "fixed top-0 left-0 right-0 z-50 transition-all duration-300",
-        scrolled ? "bg-white shadow-md py-2" : "bg-white py-4",
+        scrolled ? "bg-white shadow-sm py-2" : "bg-white py-3",
       )}
     >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -117,43 +100,30 @@ export default function NavbarComponent({ user }: { user?: any }) {
           <div className="flex items-center">
             <Link href="/" className="flex items-center gap-2">
               <div className="relative h-8 w-8">
-                <Briefcase className="h-8 w-8 text-green-600" />
+                <Briefcase className="h-8 w-8 text-[#1dbf73]" />
               </div>
-              <span className="text-2xl font-bold bg-gradient-to-r from-green-600 to-green-800 bg-clip-text text-transparent">
-                CareerHub
+              <span className="text-2xl font-bold text-[#404145]">
+                Career<span className="text-[#1dbf73]">Hub</span>
               </span>
             </Link>
           </div>
 
-          {/* Desktop Navigation */}
-          <div className="hidden md:flex items-center space-x-1">
+          {/* Desktop Navigation - Centered */}
+          <div className="hidden md:flex items-center justify-center flex-1 ml-16">
             <NavigationMenu>
               <NavigationMenuList>
                 <NavigationMenuItem>
-                  <Link href="/" legacyBehavior passHref>
-                    <NavigationMenuLink
-                      className={cn(
-                        "group inline-flex h-10 w-max items-center justify-center rounded-md px-4 py-2 text-sm font-medium transition-colors hover:bg-green-50 hover:text-green-700 focus:bg-green-50 focus:text-green-700 focus:outline-none disabled:pointer-events-none disabled:opacity-50",
-                        "data-[active]:bg-green-50 data-[active]:text-green-700",
-                      )}
-                    >
-                      Home
-                    </NavigationMenuLink>
-                  </Link>
-                </NavigationMenuItem>
-
-                <NavigationMenuItem>
-                  <NavigationMenuTrigger className="group text-sm font-medium hover:bg-green-50 hover:text-green-700 focus:bg-green-50 focus:text-green-700">
-                    Categories
+                  <NavigationMenuTrigger className="group text-sm font-medium text-[#404145] hover:text-[#1dbf73]">
+                    CareerHub Pro
                   </NavigationMenuTrigger>
                   <NavigationMenuContent>
                     <ul className="grid w-[400px] gap-3 p-4 md:w-[500px] md:grid-cols-2 lg:w-[600px]">
-                      {categories.map((category) => (
+                      {categories.slice(0, 3).map((category) => (
                         <li key={category.name}>
                           <Link href={category.href} legacyBehavior passHref>
                             <NavigationMenuLink
                               className={cn(
-                                "block select-none space-y-1 rounded-md p-3 leading-none no-underline outline-none transition-colors hover:bg-green-50 hover:text-green-700 focus:bg-green-50 focus:text-green-700",
+                                "block select-none space-y-1 rounded-md p-3 leading-none no-underline outline-none transition-colors hover:bg-[#f5f5f5] hover:text-[#1dbf73]",
                               )}
                             >
                               <div className="flex items-center">
@@ -170,51 +140,71 @@ export default function NavbarComponent({ user }: { user?: any }) {
                 </NavigationMenuItem>
 
                 <NavigationMenuItem>
-                  <Link href="/" legacyBehavior passHref>
-                    <NavigationMenuLink
-                      className={cn(
-                        "group inline-flex h-10 w-max items-center justify-center rounded-md px-4 py-2 text-sm font-medium transition-colors hover:bg-green-50 hover:text-green-700 focus:bg-green-50 focus:text-green-700 focus:outline-none disabled:pointer-events-none disabled:opacity-50",
-                        "data-[active]:bg-green-50 data-[active]:text-green-700",
-                      )}
-                    >
-                      Pricing
-                    </NavigationMenuLink>
-                  </Link>
-                </NavigationMenuItem>
-
-                <NavigationMenuItem>
-                  <Link href="/" legacyBehavior passHref>
-                    <NavigationMenuLink
-                      className={cn(
-                        "group inline-flex h-10 w-max items-center justify-center rounded-md px-4 py-2 text-sm font-medium transition-colors hover:bg-green-50 hover:text-green-700 focus:bg-green-50 focus:text-green-700 focus:outline-none disabled:pointer-events-none disabled:opacity-50",
-                        "data-[active]:bg-green-50 data-[active]:text-green-700",
-                      )}
-                    >
-                      About
-                    </NavigationMenuLink>
-                  </Link>
+                  <NavigationMenuTrigger className="group text-sm font-medium text-[#404145] hover:text-[#1dbf73]">
+                    Explore
+                  </NavigationMenuTrigger>
+                  <NavigationMenuContent>
+                    <ul className="grid w-[400px] gap-3 p-4 md:w-[500px] md:grid-cols-2 lg:w-[600px]">
+                      {categories.map((category) => (
+                        <li key={category.name}>
+                          <Link href={category.href} legacyBehavior passHref>
+                            <NavigationMenuLink
+                              className={cn(
+                                "block select-none space-y-1 rounded-md p-3 leading-none no-underline outline-none transition-colors hover:bg-[#f5f5f5] hover:text-[#1dbf73]",
+                              )}
+                            >
+                              <div className="flex items-center">
+                                {category.icon}
+                                <div className="text-sm font-medium leading-none">{category.name}</div>
+                              </div>
+                              <p className="line-clamp-2 text-sm leading-snug text-gray-500">{category.description}</p>
+                            </NavigationMenuLink>
+                          </Link>
+                        </li>
+                      ))}
+                    </ul>
+                  </NavigationMenuContent>
                 </NavigationMenuItem>
               </NavigationMenuList>
             </NavigationMenu>
           </div>
 
-          {/* Right side: Search, Notifications, Profile */}
-          <div className="flex items-center gap-2 md:gap-4">
+          {/* Right side: Search, Language, Become a Seller, Sign In, Join */}
+          <div className="flex items-center gap-2 md:gap-5">
+            {/* Search Button */}
             <Button
               variant="ghost"
               size="icon"
-              className="text-gray-600 hover:text-green-700 hover:bg-green-50"
+              className="text-[#404145] hover:text-[#1dbf73] hover:bg-transparent"
               onClick={() => setOpen(!open)}
             >
               <Search className="h-5 w-5" />
               <span className="sr-only">Search</span>
             </Button>
+            <Link href="/contact-us" className="hidden md:block">
+            <Button
+              variant="ghost"
+              size="icon"
+              className="text-[#404145] hover:text-[#1dbf73] hover:bg-transparent hidden md:flex items-center"
+            >
+              <span className="ml-1 text-sm font-medium">Contact</span>
+            </Button>
+
+            </Link>
+            <Link href="/about-us" className="hidden md:block">
+              <Button
+                variant="ghost"
+                className="text-[#404145] hover:text-[#1dbf73] hover:bg-transparent text-sm font-medium"
+              >
+                About
+              </Button>
+            </Link>
 
             {user && (
               <Button
                 variant="ghost"
                 size="icon"
-                className="text-gray-600 hover:text-green-700 hover:bg-green-50 relative"
+                className="text-[#404145] hover:text-[#1dbf73] hover:bg-transparent relative"
               >
                 <Bell className="h-5 w-5" />
                 <span className="absolute top-1 right-1 h-2 w-2 rounded-full bg-red-500"></span>
@@ -224,14 +214,22 @@ export default function NavbarComponent({ user }: { user?: any }) {
 
             {/* If user is not logged in, show Sign In */}
             {!user && (
-              <div className="hidden md:flex gap-3">
+              <div className="hidden md:flex items-center gap-3">
                 <Link href="/login">
-                  <Button variant="outline" className="border-green-600 text-green-700 hover:bg-green-50">
-                    Sign In
+                  <Button
+                    variant="ghost"
+                    className="text-[#404145] hover:text-[#1dbf73] hover:bg-transparent text-sm font-medium"
+                  >
+                    Sign in
                   </Button>
                 </Link>
                 <Link href="/sign-up">
-                  <Button className="bg-green-600 hover:bg-green-700 text-white">Sign Up</Button>
+                  <Button
+                    variant="outline"
+                    className="border-[#1dbf73] text-[#1dbf73] hover:bg-transparent hover:text-[#1dbf73] font-medium"
+                  >
+                    Join
+                  </Button>
                 </Link>
               </div>
             )}
@@ -241,9 +239,9 @@ export default function NavbarComponent({ user }: { user?: any }) {
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
                   <Button variant="ghost" className="relative h-10 w-10 rounded-full p-0">
-                    <Avatar className="h-10 w-10 border-2 border-green-100">
+                    <Avatar className="h-10 w-10 border-2 border-[#1dbf73]">
                       <AvatarImage src={user.image || "/images/profile-image.webp"} alt="User Profile" />
-                      <AvatarFallback className="bg-green-100 text-green-700">
+                      <AvatarFallback className="bg-[#e4f9f0] text-[#1dbf73]">
                         {user.name?.charAt(0).toUpperCase() || "U"}
                       </AvatarFallback>
                     </Avatar>
@@ -292,7 +290,7 @@ export default function NavbarComponent({ user }: { user?: any }) {
                 <Button
                   variant="ghost"
                   size="icon"
-                  className="md:hidden text-gray-600 hover:text-green-700 hover:bg-green-50"
+                  className="md:hidden text-[#404145] hover:text-[#1dbf73] hover:bg-transparent"
                 >
                   <Menu className="h-6 w-6" />
                   <span className="sr-only">Open menu</span>
@@ -337,9 +335,9 @@ function MobileSidebar({
       <div className="p-4 border-b">
         <div className="flex items-center justify-between">
           <Link href="/" className="flex items-center gap-2" onClick={onClose}>
-            <Briefcase className="h-6 w-6 text-green-600" />
-            <span className="text-xl font-bold bg-gradient-to-r from-green-600 to-green-800 bg-clip-text text-transparent">
-              CareerHub
+            <Briefcase className="h-6 w-6 text-[#1dbf73]" />
+            <span className="text-xl font-bold text-[#404145]">
+              Career<span className="text-[#1dbf73]">Hub</span>
             </span>
           </Link>
           <Button variant="ghost" size="icon" onClick={onClose}>
@@ -352,9 +350,9 @@ function MobileSidebar({
       {user && (
         <div className="p-4 border-b">
           <div className="flex items-center gap-3">
-            <Avatar className="h-10 w-10 border-2 border-green-100">
+            <Avatar className="h-10 w-10 border-2 border-[#e4f9f0]">
               <AvatarImage src={user.image || "/images/profile-image.webp"} alt="User Profile" />
-              <AvatarFallback className="bg-green-100 text-green-700">
+              <AvatarFallback className="bg-[#e4f9f0] text-[#1dbf73]">
                 {user.name?.charAt(0).toUpperCase() || "U"}
               </AvatarFallback>
             </Avatar>
@@ -371,7 +369,7 @@ function MobileSidebar({
         <nav className="px-2 space-y-1">
           <Link
             href="/"
-            className="flex items-center gap-3 px-3 py-2.5 rounded-md text-gray-700 hover:bg-green-50 hover:text-green-700 transition-colors"
+            className="flex items-center gap-3 px-3 py-2.5 rounded-md text-[#404145] hover:bg-[#f5f5f5] hover:text-[#1dbf73] transition-colors"
             onClick={onClose}
           >
             <Home className="h-5 w-5 text-gray-500" />
@@ -381,7 +379,7 @@ function MobileSidebar({
           {/* Categories with dropdown */}
           <div>
             <button
-              className="w-full flex items-center justify-between gap-3 px-3 py-2.5 rounded-md text-gray-700 hover:bg-green-50 hover:text-green-700 transition-colors"
+              className="w-full flex items-center justify-between gap-3 px-3 py-2.5 rounded-md text-[#404145] hover:bg-[#f5f5f5] hover:text-[#1dbf73] transition-colors"
               onClick={() => setMobileCategoriesOpen(!mobileCategoriesOpen)}
             >
               <div className="flex items-center gap-3">
@@ -409,7 +407,7 @@ function MobileSidebar({
                       <Link
                         key={category.name}
                         href={category.href}
-                        className="flex items-center gap-2 px-3 py-2 rounded-md text-gray-600 hover:bg-green-50 hover:text-green-700 transition-colors"
+                        className="flex items-center gap-2 px-3 py-2 rounded-md text-gray-600 hover:bg-[#f5f5f5] hover:text-[#1dbf73] transition-colors"
                         onClick={onClose}
                       >
                         {category.icon}
@@ -424,7 +422,7 @@ function MobileSidebar({
 
           <Link
             href="/"
-            className="flex items-center gap-3 px-3 py-2.5 rounded-md text-gray-700 hover:bg-green-50 hover:text-green-700 transition-colors"
+            className="flex items-center gap-3 px-3 py-2.5 rounded-md text-[#404145] hover:bg-[#f5f5f5] hover:text-[#1dbf73] transition-colors"
             onClick={onClose}
           >
             <PriceTag className="h-5 w-5 text-gray-500" />
@@ -433,7 +431,7 @@ function MobileSidebar({
 
           <Link
             href="/"
-            className="flex items-center gap-3 px-3 py-2.5 rounded-md text-gray-700 hover:bg-green-50 hover:text-green-700 transition-colors"
+            className="flex items-center gap-3 px-3 py-2.5 rounded-md text-[#404145] hover:bg-[#f5f5f5] hover:text-[#1dbf73] transition-colors"
             onClick={onClose}
           >
             <Info className="h-5 w-5 text-gray-500" />
@@ -449,7 +447,7 @@ function MobileSidebar({
               <h3 className="px-3 text-xs font-semibold text-gray-500 uppercase tracking-wider">Account</h3>
               <Link
                 href={user.role === "employee" ? "/employee-profile" : "/employer-profile"}
-                className="flex items-center gap-3 px-3 py-2.5 rounded-md text-gray-700 hover:bg-green-50 hover:text-green-700 transition-colors"
+                className="flex items-center gap-3 px-3 py-2.5 rounded-md text-[#404145] hover:bg-[#f5f5f5] hover:text-[#1dbf73] transition-colors"
                 onClick={onClose}
               >
                 <User className="h-5 w-5 text-gray-500" />
@@ -457,7 +455,7 @@ function MobileSidebar({
               </Link>
               <Link
                 href="/"
-                className="flex items-center gap-3 px-3 py-2.5 rounded-md text-gray-700 hover:bg-green-50 hover:text-green-700 transition-colors"
+                className="flex items-center gap-3 px-3 py-2.5 rounded-md text-[#404145] hover:bg-[#f5f5f5] hover:text-[#1dbf73] transition-colors"
                 onClick={onClose}
               >
                 <CreditCard className="h-5 w-5 text-gray-500" />
@@ -465,7 +463,7 @@ function MobileSidebar({
               </Link>
               <Link
                 href="/"
-                className="flex items-center gap-3 px-3 py-2.5 rounded-md text-gray-700 hover:bg-green-50 hover:text-green-700 transition-colors"
+                className="flex items-center gap-3 px-3 py-2.5 rounded-md text-[#404145] hover:bg-[#f5f5f5] hover:text-[#1dbf73] transition-colors"
                 onClick={onClose}
               >
                 <Users className="h-5 w-5 text-gray-500" />
@@ -493,12 +491,12 @@ function MobileSidebar({
         ) : (
           <div className="space-y-2">
             <Link href="/login" onClick={onClose}>
-              <Button variant="outline" className="w-full border-green-600 text-green-700">
+              <Button variant="outline" className="w-full border-[#1dbf73] text-[#1dbf73]">
                 Sign In
               </Button>
             </Link>
             <Link href="/sign-up" onClick={onClose}>
-              <Button className="w-full bg-green-600 hover:bg-green-700 text-white">Sign Up</Button>
+              <Button className="w-full bg-[#1dbf73] hover:bg-[#19a463] text-white">Sign Up</Button>
             </Link>
           </div>
         )}
@@ -506,3 +504,4 @@ function MobileSidebar({
     </div>
   )
 }
+
