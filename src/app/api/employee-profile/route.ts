@@ -11,6 +11,31 @@ cloudinary.config({
   api_secret: process.env.CLOUDINARY_API_SECRET,
 });
 
+export async function GET(request: NextRequest) {
+  try {
+    const { searchParams } = new URL(request.url);
+    const email = searchParams.get("email");
+
+    // Fetch the employee profile from the database
+    const employeeProfile = await prisma.employeeProfile.findUnique({
+      where: { email: email as string },
+    });
+
+    if (!employeeProfile) {
+      console.log("Profile not found for email:", email);
+      return NextResponse.json({ error: "Profile not found" }, { status: 404 });
+    }
+
+    return NextResponse.json({ employeeProfile }, { status: 200 });
+  } catch (error) {
+    console.error("Error fetching profile:", error);
+    return NextResponse.json({ error: "Internal server error" }, { status: 500 });
+  }
+}
+
+
+
+
 export async function POST(request: NextRequest) {
   try {
     const formData = await request.formData();

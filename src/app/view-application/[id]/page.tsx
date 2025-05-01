@@ -9,7 +9,19 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import { Skeleton } from "@/components/ui/skeleton"
-import { Mail, Phone, Briefcase, GraduationCap, Linkedin, Github, FileText } from "lucide-react"
+import {
+  Mail,
+  Phone,
+  Briefcase,
+  GraduationCap,
+  Linkedin,
+  Github,
+  FileText,
+  Download,
+  ZoomIn,
+  ZoomOut,
+  Maximize,
+} from "lucide-react"
 
 type EmployeeProfile = {
   id: string
@@ -31,6 +43,8 @@ export default function JobSeekerProfile() {
   const [profile, setProfile] = useState<EmployeeProfile | null>(null)
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
+  const [scale, setScale] = useState<number>(1)
+  const [isFullscreen, setIsFullscreen] = useState<boolean>(false)
 
   useEffect(() => {
     if (!id) {
@@ -54,6 +68,48 @@ export default function JobSeekerProfile() {
 
     fetchProfile()
   }, [id])
+
+  const handleDownloadResume = async () => {
+    if (!profile?.resumeUrl) return;
+  
+    try {
+      // 1. Fetch the file
+      const res = await fetch(profile.resumeUrl);
+      if (!res.ok) throw new Error("Network response was not OK");
+  
+      // 2. Turn it into a blob
+      const blob = await res.blob();
+  
+      // 3. Create a temporary object URL
+      const url = window.URL.createObjectURL(blob);
+  
+      // 4. Create & click the download link
+      const link = document.createElement("a");
+      link.href = url;
+      link.download = `${profile.name.replace(/\s+/g, "_")}_Resume.pdf`;
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+  
+      // 5. Clean up the object URL
+      window.URL.revokeObjectURL(url);
+    } catch (error) {
+      console.error("Error downloading resume:", error);
+    }
+  };
+  
+
+  const toggleFullscreen = () => {
+    setIsFullscreen(!isFullscreen)
+  }
+
+  const zoomIn = () => {
+    setScale((prev) => Math.min(prev + 0.2, 2.5))
+  }
+
+  const zoomOut = () => {
+    setScale((prev) => Math.max(prev - 0.2, 0.5))
+  }
 
   if (error) {
     return (
@@ -94,6 +150,9 @@ export default function JobSeekerProfile() {
 
   return (
     <div className="container max-w-5xl py-8 mx-auto space-y-6 px-4 sm:px-6">
+      <style jsx global>
+        {pdfViewerStyles}
+      </style>
       <Card className="overflow-hidden">
         <div className="h-32 bg-gradient-to-r from-blue-500 to-purple-600" />
         <div className="px-6 -mt-16">
@@ -190,18 +249,70 @@ export default function JobSeekerProfile() {
 
             <div className="md:col-span-2">
               <Card className="h-full">
-                <CardHeader>
+                <CardHeader className="flex flex-row items-center justify-between">
                   <CardTitle className="flex items-center">
                     <FileText className="h-4 w-4 mr-2" />
                     Resume
                   </CardTitle>
+                  {profile.resumeUrl && (
+                    <div className="flex items-center gap-2">
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        onClick={zoomOut}
+                        className="h-8 w-8 p-0"
+                        aria-label="Zoom out"
+                      >
+                        <ZoomOut className="h-4 w-4" />
+                      </Button>
+                      <span className="text-sm">{Math.round(scale * 100)}%</span>
+                      <Button variant="outline" size="sm" onClick={zoomIn} className="h-8 w-8 p-0" aria-label="Zoom in">
+                        <ZoomIn className="h-4 w-4" />
+                      </Button>
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        onClick={toggleFullscreen}
+                        className="h-8 w-8 p-0"
+                        aria-label="Toggle fullscreen"
+                      >
+                        <Maximize className="h-4 w-4" />
+                      </Button>
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        onClick={handleDownloadResume}
+                        className="flex items-center gap-1"
+                      >
+                        <Download className="h-4 w-4" />
+                        <span className="hidden sm:inline">Download</span>
+                      </Button>
+                    </div>
+                  )}
                 </CardHeader>
                 <CardContent>
                   {profile.resumeUrl ? (
-                    <div className="border rounded-md overflow-hidden h-[600px]">
-                      <Worker workerUrl="https://unpkg.com/pdfjs-dist@3.4.120/build/pdf.worker.min.js">
-                        <Viewer fileUrl={profile.resumeUrl} />
-                      </Worker>
+                    <div
+                      className={`border rounded-md overflow-hidden ${isFullscreen ? "fixed inset-0 z-50 bg-background p-4" : "h-[400px] sm:h-[600px]"}`}
+                    >
+                      <div className={`${isFullscreen ? "h-full flex flex-col" : ""}`}>
+                        {isFullscreen && (
+                          <div className="flex justify-end mb-2">
+                            <Button variant="outline" size="sm" onClick={toggleFullscreen}>
+                              Close Fullscreen
+                            </Button>
+                          </div>
+                        )}
+                        <div className={`${isFullscreen ? "flex-1 overflow-auto" : ""}`}>
+                          <Worker workerUrl="https://unpkg.com/pdfjs-dist@3.4.120/build/pdf.worker.min.js">
+                            <Viewer
+                              fileUrl={profile.resumeUrl}
+                              defaultScale={scale}
+                              onZoom={(e) => setScale(e.scale)}
+                            />
+                          </Worker>
+                        </div>
+                      </div>
                     </div>
                   ) : (
                     <div className="flex flex-col items-center justify-center h-[300px] border rounded-md bg-muted/20">
@@ -282,3 +393,21 @@ function ProfileSkeleton() {
     </div>
   )
 }
+
+// Add global styles for PDF viewer responsiveness
+export const dynamic = "force-dynamic"
+
+// This ensures the PDF viewer is responsive on mobile
+const pdfViewerStyles = `
+  .rpv-core__viewer {
+    height: 100% !important;
+  }
+  .rpv-core__inner-page {
+    max-width: 100% !important;
+  }
+  @media (max-width: 640px) {
+    .rpv-core__inner-page {
+      padding: 0 !important;
+    }
+  }
+`

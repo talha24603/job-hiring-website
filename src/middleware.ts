@@ -60,7 +60,7 @@
         url.pathname === '/select-role' ||
         url.pathname === '/post-job' ||
         url.pathname === '/employer-profile' ||
-        url.pathname === '/edit-profile' ||
+        url.pathname === '/profile' ||
         url.pathname.startsWith('/apply-job-form') ||
         url.pathname.startsWith('/posted-job') ||
         url.pathname.startsWith('/edit-job') ||
@@ -77,6 +77,7 @@
   // Config remains the same
   export const config = {
     matcher: [
+      '/profile',
       '/verifyCode/:path*',
       '/login',
       '/sign-up',
