@@ -48,7 +48,7 @@ interface EmployerProfileProps {
   applications?: Application[]
 }
 
-export default function EmployerProfilePage({ user, postedJobs = [], applications = [] }: EmployerProfileProps) {
+export default function EmployerDashboard({ user, postedJobs = [], applications = [] }: EmployerProfileProps) {
   const router = useRouter()
 
   const [open, setOpen] = useState(false)
@@ -303,27 +303,142 @@ interface ApplicationCardProps {
 }
 
 // In ApplicationCard component:
-function ApplicationCard({ application, index }: { application: Application; index: number }) {
+function ApplicationCard({ application, index }: ApplicationCardProps) {
   const router = useRouter()
+  const [isUpdating, setIsUpdating] = useState(false)
+  const [currentStatus, setCurrentStatus] = useState(application.status)
+
+  // Function to determine badge color based on status
+  const getStatusBadgeStyles = (status: string) => {
+    switch (status.toLowerCase()) {
+      case "applied":
+        return "bg-blue-50 text-blue-700 border-blue-200"
+      case "reviewing":
+      case "under review":
+        return "bg-yellow-50 text-yellow-700 border-yellow-200"
+      case "interview":
+      case "interviewing":
+        return "bg-purple-50 text-purple-700 border-purple-200"
+      case "hired":
+      case "accepted":
+        return "bg-green-50 text-green-700 border-green-200"
+      case "rejected":
+        return "bg-red-50 text-red-700 border-red-200"
+      default:
+        return "bg-gray-50 text-gray-700 border-gray-200"
+    }
+  }
+
+  const handleStatusChange = async (newStatus: string) => {
+    try {
+      setIsUpdating(true)
+
+      // Make API call to update application status
+      const response = await fetch(`/api/application/${application.id}/status`, {
+        method: "PATCH",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ status: newStatus }),
+      })
+
+      if (response.ok) {
+        setCurrentStatus(newStatus)
+        // You could add a toast notification here
+      } else {
+        // Handle error
+        console.error("Failed to update status")
+      }
+    } catch (error) {
+      console.error("Error updating application status:", error)
+    } finally {
+      setIsUpdating(false)
+    }
+  }
+
   return (
-    <Card className="bg-white shadow hover:shadow-md transition fade-up" style={{ animationDelay: `${index * 0.05}s` }}>
+    <Card
+      className={`bg-white shadow hover:shadow-md transition fade-up border-l-4 ${
+        currentStatus.toLowerCase() === "hired" || currentStatus.toLowerCase() === "accepted"
+          ? "border-l-green-500"
+          : currentStatus.toLowerCase() === "rejected"
+            ? "border-l-red-500"
+            : currentStatus.toLowerCase() === "interview" || currentStatus.toLowerCase() === "interviewing"
+              ? "border-l-purple-500"
+              : currentStatus.toLowerCase() === "reviewing" || currentStatus.toLowerCase() === "under review"
+                ? "border-l-yellow-500"
+                : "border-l-blue-500"
+      }`}
+      style={{ animationDelay: `${index * 0.05}s` }}
+    >
       <CardHeader>
-        <CardTitle className="text-lg">{application.employeeProfile.name}</CardTitle>
-        <CardDescription>{application.employeeProfile.email}</CardDescription>
+        <div className="flex justify-between items-start">
+          <div>
+            <CardTitle className="text-lg">{application.employeeProfile.name}</CardTitle>
+            <CardDescription>{application.employeeProfile.email}</CardDescription>
+          </div>
+          <Badge variant="outline" className={getStatusBadgeStyles(currentStatus)}>
+            {currentStatus.charAt(0).toUpperCase() + currentStatus.slice(1).toLowerCase()}
+          </Badge>
+        </div>
       </CardHeader>
       <CardContent>
-        <div className="flex gap-2">
-          <Button
-            variant="outline"
-            size="sm"
-            className="text-xs"
-            onClick={() => router.push(`/view-application/${application.employeeProfile.id}`)}
-          >
-            View Resume
-          </Button>
-          <Button variant="outline" size="sm" className="text-xs">
-            View ID
-          </Button>
+        <div className="space-y-4">
+          <div className="flex gap-2">
+            <Button
+              variant="outline"
+              size="sm"
+              className="text-xs"
+              onClick={() => router.push(`/view-application/${application.employeeProfile.id}`)}
+            >
+              View Resume
+            </Button>
+            <Button variant="outline" size="sm" className="text-xs">
+              View ID
+            </Button>
+          </div>
+
+          <div>
+            <p className="text-sm font-medium mb-2">Update Status:</p>
+            <div className="flex flex-wrap gap-2">
+              <Button
+                variant="outline"
+                size="sm"
+                className={`text-xs ${currentStatus.toLowerCase() === "reviewing" ? "bg-yellow-100" : ""}`}
+                onClick={() => handleStatusChange("reviewing")}
+                disabled={isUpdating || currentStatus.toLowerCase() === "reviewing"}
+              >
+                Reviewing
+              </Button>
+              <Button
+                variant="outline"
+                size="sm"
+                className={`text-xs ${currentStatus.toLowerCase() === "interview" ? "bg-purple-100" : ""}`}
+                onClick={() => handleStatusChange("interview")}
+                disabled={isUpdating || currentStatus.toLowerCase() === "interview"}
+              >
+                Interview
+              </Button>
+              <Button
+                variant="outline"
+                size="sm"
+                className={`text-xs ${currentStatus.toLowerCase() === "hired" ? "bg-green-100" : ""}`}
+                onClick={() => handleStatusChange("hired")}
+                disabled={isUpdating || currentStatus.toLowerCase() === "hired"}
+              >
+                Hire
+              </Button>
+              <Button
+                variant="outline"
+                size="sm"
+                className={`text-xs ${currentStatus.toLowerCase() === "rejected" ? "bg-red-100" : ""}`}
+                onClick={() => handleStatusChange("rejected")}
+                disabled={isUpdating || currentStatus.toLowerCase() === "rejected"}
+              >
+                Reject
+              </Button>
+            </div>
+          </div>
         </div>
       </CardContent>
       <CardFooter className="text-sm text-gray-500">

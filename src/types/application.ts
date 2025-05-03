@@ -32,6 +32,7 @@ export interface EmployeeProfile {
     id: string;              // JobApplication id
     appliedAt: Date;
     jobPost: JobPost;
+    status: string; // e.g., "applied", "interviewed", "hired", "rejected"
     employeeProfile: EmployeeProfile;
   }
   

@@ -35,7 +35,7 @@
       token.role !== "employer" && // Check role first
       (
         url.pathname.startsWith('/posted-job') ||
-        url.pathname === '/employer-profile' ||
+        url.pathname === '/employer-dashboard' ||
         url.pathname === '/post-job' ||
         url.pathname.startsWith('/edit-job')
       )
@@ -59,7 +59,7 @@
       (
         url.pathname === '/select-role' ||
         url.pathname === '/post-job' ||
-        url.pathname === '/employer-profile' ||
+        url.pathname === '/employer-dashboard' ||
         url.pathname === '/profile' ||
         url.pathname.startsWith('/apply-job-form') ||
         url.pathname.startsWith('/posted-job') ||
@@ -83,7 +83,7 @@
       '/sign-up',
       '/',
       '/select-role',
-      '/employer-profile',
+      '/employer-dashboard',
       '/post-job',
       '/apply-job/:path*',
       '/apply-job-form/:path*',

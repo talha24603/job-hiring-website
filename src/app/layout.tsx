@@ -6,6 +6,7 @@ import AuthProvider from "@/context/authprovider";
 import { SocketProvider } from "../context/socket";
 import Footer from "@/components/Footer";
 import NavBar from "@/components/navbar/navbarServer";
+import { NotificationProvider } from "@/components/notifications/NotificationProvider";
 
 // const session = await auth()
 // const user = session?.user
@@ -41,6 +42,7 @@ export default function RootLayout({
       >
         <AuthProvider>
           <SocketProvider>
+            <NotificationProvider>
             <NavBar  />
             
             {/* 👇 Add a wrapper with top padding */}
@@ -49,6 +51,7 @@ export default function RootLayout({
             </main>
 
             <Footer />
+            </NotificationProvider>
           </SocketProvider>
 
           <Toaster />

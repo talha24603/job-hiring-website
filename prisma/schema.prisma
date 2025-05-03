@@ -21,6 +21,7 @@ model User {
   JobPost         JobPost[]
   provider        String?
   EmployeeProfile EmployeeProfile[]
+  Notification    Notification[]
 }
 
 model EmployeeProfile {
@@ -60,65 +61,36 @@ model JobPost {
   // Relation to EmployeeProfile: Job can have many applicants
   applicants     EmployeeProfile[] @relation("JobApplications")
   JobApplication JobApplication[]
+  Notification   Notification[]
 
   @@map("job_post")
 }
 
-// model Documents {
-//   id String @id @default(uuid())
-
-//   createdAt DateTime @default(now())
-//   updatedAt DateTime @updatedAt
-
-//   // Required documents
-//   resumeUrl   String
-//   identityUrl String
-
-//   // Optional documents
-//   coverLetterUrl  String?
-//   educationUrl    String?
-//   experienceUrl   String?
-//   certificatesUrl String?
-//   portfolioUrl    String?
-// }
-
-// model EmployeeProfile {
-//   id              String   @id @default(uuid())
-//   name            String
-//   email           String   @unique
-//   phone           String?
-//   skills          String?
-//   education       String?
-//   linkedin        String?
-//   github          String?
-//   profilePicUrl   String?
-//   resumeUrl       String?
-//   createdAt       DateTime @default(now())
-// }
-// model CandidateApplication {
-//   id            String   @id @default(uuid())
-//   name          String
-//   email         String   @unique
-//   phone         String?
-//   skills        String?
-//   education     String?
-//   linkedin      String?
-//   github        String?
-//   profilePicUrl String?
-//   resumeUrl     String?
-//   createdAt     DateTime @default(now())
-//   jobPost       JobPost  @relation(fields: [jobPostId], references: [id], onDelete: Cascade)
-//   jobPostId     String
-//}
-
 model JobApplication {
-  id                String   @id @default(uuid())
-  appliedAt         DateTime @default(now())
+  id                String          @id @default(uuid())
+  appliedAt         DateTime        @default(now())
   employeeProfileId String
   jobPostId         String
-  status           String   @default("PENDING")
-  employeeProfile EmployeeProfile @relation(fields: [employeeProfileId], references: [id])
-  jobPost         JobPost         @relation(fields: [jobPostId], references: [id])
+  status            String          @default("PENDING")
+  employeeProfile   EmployeeProfile @relation(fields: [employeeProfileId], references: [id])
+  jobPost           JobPost         @relation(fields: [jobPostId], references: [id])
 
   @@unique([employeeProfileId, jobPostId])
+}
+
+model Notification {
+  id        String   @id @default(uuid())
+  message   String
+  type      String // e.g., "INFO", "ALERT", "JOB", etc.
+  isRead    Boolean  @default(false)
+  createdAt DateTime @default(now())
+
+  userId String
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  // Optional foreign key for job-related notifications
+  jobPostId String?
+  jobPost   JobPost? @relation(fields: [jobPostId], references: [id])
+
+  @@index([userId])
 }

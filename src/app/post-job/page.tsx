@@ -152,6 +152,8 @@ export default function JobPostForm({ dataToEdit }: JobPostFormProps) {
     { value: "data", label: "Data Engineer" },
     { value: "database", label: "Database Administrator" },
     { value: "cloud", label: "Cloud Engineer" },
+    { value: "ux-ui-designer", label: "UX/UI Designer" },
+    { value: "other", label: "Other" },
   ];
 
   const jobTypes = [

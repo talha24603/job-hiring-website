@@ -23,10 +23,28 @@ import { Button } from "@/components/ui/button"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet"
 import { Separator } from "@/components/ui/separator"
-import { Search, Bell, Menu, X, Briefcase, Building, Code, Brush, ChevronDown, Home, TagIcon as PriceTag, Info, LogOut, User, CreditCard, Users, Globe } from 'lucide-react'
+import {
+  Search,
+  Menu,
+  X,
+  Briefcase,
+  Building,
+  Code,
+  Brush,
+  ChevronDown,
+  Home,
+  Info,
+  LogOut,
+  User,
+  CreditCard,
+  Users,
+  Globe,
+  Bell,
+} from "lucide-react"
 import { cn } from "@/lib/utils"
 import SearchSheet from "../searchSheet"
 import { motion, AnimatePresence } from "framer-motion"
+import NotificationBell from "../notifications/NotificationBell"
 
 export default function NavbarComponent({ user }: { user?: any }) {
   const [open, setOpen] = useState(false)
@@ -62,20 +80,20 @@ export default function NavbarComponent({ user }: { user?: any }) {
 
   const categories = [
     {
-      name: "Technology",
-      href: "/category/technology",
+      name: "Frontend Developer",
+      href: "/job/frontend-developer",
       icon: <Code className="h-4 w-4 mr-2" />,
       description: "Software development, IT, and tech roles",
     },
     {
-      name: "Business",
-      href: "/category/business",
+      name: "Full Stack Developer",
+      href: "/job/full-stack-developer",
       icon: <Building className="h-4 w-4 mr-2" />,
       description: "Management, finance, and administrative positions",
     },
     {
-      name: "Creative",
-      href: "/category/creative",
+      name: "AI/ML Engineer",
+      href: "/job/ai",
       icon: <Brush className="h-4 w-4 mr-2" />,
       description: "Design, content creation, and marketing roles",
     },
@@ -99,9 +117,9 @@ export default function NavbarComponent({ user }: { user?: any }) {
           {/* Logo */}
           <div className="flex items-center">
             <Link href="/" className="flex items-center gap-2">
-              <div className="relative h-8 w-8">
+              {/* <div className="relative h-8 w-8">
                 <Briefcase className="h-8 w-8 text-[#1dbf73]" />
-              </div>
+              </div> */}
               <span className="text-2xl font-bold text-[#404145]">
                 Career<span className="text-[#1dbf73]">Hub</span>
               </span>
@@ -181,17 +199,16 @@ export default function NavbarComponent({ user }: { user?: any }) {
               <Search className="h-5 w-5" />
               <span className="sr-only">Search</span>
             </Button>
-            <Link href="/contact-us" className="hidden md:block">
-            <Button
-              variant="ghost"
-              size="icon"
-              className="text-[#404145] hover:text-[#1dbf73] hover:bg-transparent hidden md:flex items-center"
-            >
-              <span className="ml-1 text-sm font-medium">Contact</span>
-            </Button>
-
+            <Link href="/contact" className="hidden md:block">
+              <Button
+                variant="ghost"
+                size="icon"
+                className="text-[#404145] hover:text-[#1dbf73] hover:bg-transparent hidden md:flex items-center"
+              >
+                <span className="ml-1 text-sm font-medium">Contact</span>
+              </Button>
             </Link>
-            <Link href="/about-us" className="hidden md:block">
+            <Link href="/about" className="hidden md:block">
               <Button
                 variant="ghost"
                 className="text-[#404145] hover:text-[#1dbf73] hover:bg-transparent text-sm font-medium"
@@ -200,17 +217,8 @@ export default function NavbarComponent({ user }: { user?: any }) {
               </Button>
             </Link>
 
-            {user && (
-              <Button
-                variant="ghost"
-                size="icon"
-                className="text-[#404145] hover:text-[#1dbf73] hover:bg-transparent relative"
-              >
-                <Bell className="h-5 w-5" />
-                <span className="absolute top-1 right-1 h-2 w-2 rounded-full bg-red-500"></span>
-                <span className="sr-only">Notifications</span>
-              </Button>
-            )}
+            {/* Notification Bell (only if logged in) */}
+            {user && <NotificationBell />}
 
             {/* If user is not logged in, show Sign In */}
             {!user && (
@@ -240,7 +248,7 @@ export default function NavbarComponent({ user }: { user?: any }) {
                 <DropdownMenuTrigger asChild>
                   <Button variant="ghost" className="relative h-10 w-10 rounded-full p-0">
                     <Avatar className="h-10 w-10 border-2 border-[#1dbf73]">
-                      <AvatarImage src={user.image || "/images/profile-image.webp"} alt="User Profile" />
+                      <AvatarImage src={user.image } alt="User Profile" />
                       <AvatarFallback className="bg-[#e4f9f0] text-[#1dbf73]">
                         {user.name?.charAt(0).toUpperCase() || "U"}
                       </AvatarFallback>
@@ -257,13 +265,18 @@ export default function NavbarComponent({ user }: { user?: any }) {
                   <DropdownMenuSeparator />
                   <DropdownMenuItem>
                     <Link
-                      href={user.role === "employee" ? "/employee-profile" : "/employer-profile"}
+                      href={user.role === "employee" ? "/employee-dashboard" : "/employer-dashboard"}
                       className="flex w-full"
                     >
-                      Profile
+                      Dashboard
                     </Link>
                   </DropdownMenuItem>
                   <DropdownMenuItem>
+                    <Link href="/notifications" className="flex w-full">
+                      Notifications
+                    </Link>
+                  </DropdownMenuItem>
+                  {/* <DropdownMenuItem>
                     <Link href="/" className="flex w-full">
                       Billing
                     </Link>
@@ -272,7 +285,7 @@ export default function NavbarComponent({ user }: { user?: any }) {
                     <Link href="/" className="flex w-full">
                       Team
                     </Link>
-                  </DropdownMenuItem>
+                  </DropdownMenuItem> */}
                   <DropdownMenuSeparator />
                   <DropdownMenuItem
                     className="text-red-600 focus:text-red-600 cursor-pointer"
@@ -351,7 +364,7 @@ function MobileSidebar({
         <div className="p-4 border-b">
           <div className="flex items-center gap-3">
             <Avatar className="h-10 w-10 border-2 border-[#e4f9f0]">
-              <AvatarImage src={user.image || "/images/profile-image.webp"} alt="User Profile" />
+              <AvatarImage src={user.image } alt="User Profile" />
               <AvatarFallback className="bg-[#e4f9f0] text-[#1dbf73]">
                 {user.name?.charAt(0).toUpperCase() || "U"}
               </AvatarFallback>
@@ -421,22 +434,33 @@ function MobileSidebar({
           </div>
 
           <Link
-            href="/"
-            className="flex items-center gap-3 px-3 py-2.5 rounded-md text-[#404145] hover:bg-[#f5f5f5] hover:text-[#1dbf73] transition-colors"
-            onClick={onClose}
-          >
-            <PriceTag className="h-5 w-5 text-gray-500" />
-            <span>Pricing</span>
-          </Link>
-
-          <Link
-            href="/"
+            href="/about"
             className="flex items-center gap-3 px-3 py-2.5 rounded-md text-[#404145] hover:bg-[#f5f5f5] hover:text-[#1dbf73] transition-colors"
             onClick={onClose}
           >
             <Info className="h-5 w-5 text-gray-500" />
             <span>About</span>
           </Link>
+
+          <Link
+            href="/contact"
+            className="flex items-center gap-3 px-3 py-2.5 rounded-md text-[#404145] hover:bg-[#f5f5f5] hover:text-[#1dbf73] transition-colors"
+            onClick={onClose}
+          >
+            <Globe className="h-5 w-5 text-gray-500" />
+            <span>Contact</span>
+          </Link>
+
+          {user && (
+            <Link
+              href="/notifications"
+              className="flex items-center gap-3 px-3 py-2.5 rounded-md text-[#404145] hover:bg-[#f5f5f5] hover:text-[#1dbf73] transition-colors"
+              onClick={onClose}
+            >
+              <Bell className="h-5 w-5 text-gray-500" />
+              <span>Notifications</span>
+            </Link>
+          )}
         </nav>
 
         {/* User Account Links (if logged in) */}
@@ -446,14 +470,14 @@ function MobileSidebar({
             <div className="px-2 space-y-1">
               <h3 className="px-3 text-xs font-semibold text-gray-500 uppercase tracking-wider">Account</h3>
               <Link
-                href={user.role === "employee" ? "/employee-profile" : "/employer-profile"}
+                href={user.role === "employee" ? "/employee-dashboard" : "/employer-dashboard"}
                 className="flex items-center gap-3 px-3 py-2.5 rounded-md text-[#404145] hover:bg-[#f5f5f5] hover:text-[#1dbf73] transition-colors"
                 onClick={onClose}
               >
                 <User className="h-5 w-5 text-gray-500" />
-                <span>Profile</span>
+                <span>Dasboard</span>
               </Link>
-              <Link
+              {/* <Link
                 href="/"
                 className="flex items-center gap-3 px-3 py-2.5 rounded-md text-[#404145] hover:bg-[#f5f5f5] hover:text-[#1dbf73] transition-colors"
                 onClick={onClose}
@@ -468,7 +492,7 @@ function MobileSidebar({
               >
                 <Users className="h-5 w-5 text-gray-500" />
                 <span>Team</span>
-              </Link>
+              </Link> */}
             </div>
           </>
         )}
@@ -504,4 +528,3 @@ function MobileSidebar({
     </div>
   )
 }
-

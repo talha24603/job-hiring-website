@@ -1,9 +1,10 @@
 // app/employer-profile/page.tsx
 import { redirect } from "next/navigation";
 import { auth } from "@/auth"; // Import your auth configuration
-import EmployerProfilePage from "@/components/EmployerProfilePage";
+import EmployerProfilePage from "@/components/EmployerDashboard";
 import prisma from "@/prismaClient";
 import { Application } from "@/types/application";
+import EmployerDashboard from "@/components/EmployerDashboard";
 
 export default async function ProfilePage() {
   // Get the server session using your auth configuration
@@ -47,6 +48,7 @@ const rawApplications = await prisma.jobApplication.findMany({
 const applications: Application[] = rawApplications.map(app => ({
 
   appliedAt: app.appliedAt,
+  status: app.status, // Include the status field
   id: app.id,
   jobPost: app.jobPost,
   employeeProfile: {
@@ -58,7 +60,7 @@ const applications: Application[] = rawApplications.map(app => ({
 // Now pass the mapped applications into your component
 return (
   <>
-    <EmployerProfilePage 
+    <EmployerDashboard
       user={user} 
       postedJobs={postedJobs} 
       applications={applications}

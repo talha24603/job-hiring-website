@@ -1,6 +1,7 @@
 import { auth } from "@/auth";
 import prisma from "@/prismaClient";
 import { NextRequest, NextResponse } from "next/server";
+import { createNotification } from "@/lib/create-notification";
 
 export async function POST(request: NextRequest) {
   const { jobId } = await request.json();
@@ -9,13 +10,13 @@ export async function POST(request: NextRequest) {
   const userId = user?.id;
   const role = user?.role;
 
-  
   if (!userId) {
     return NextResponse.json({ message: "User not authenticated" }, { status: 401 });
   }
   if (role !== 'employee') {
     return NextResponse.json({ message: "You are not an employee" }, { status: 400 });
   }
+  
   // Fetch the complete employee profile
   const profile = await prisma.employeeProfile.findFirst({
     where: { userId: userId }
@@ -32,8 +33,6 @@ export async function POST(request: NextRequest) {
     { field: 'phone', label: 'Phone' },
     { field: 'skills', label: 'Skills' },
     { field: 'education', label: 'Education' },
-    
-    // { field: 'profilePicUrl', label: 'Profile Picture URL' },
     { field: 'resumeUrl', label: 'Resume URL' },
   ];
 
@@ -53,12 +52,40 @@ export async function POST(request: NextRequest) {
   }
 
   try {
+    // Fetch the job details to get the employer ID and job title
+    const job = await prisma.jobPost.findUnique({
+      where: { id: jobId },
+      include: { user: true }
+    });
+
+    if (!job) {
+      return NextResponse.json({ message: "Job not found" }, { status: 404 });
+    }
+
+    // Create the application
     const application = await prisma.jobApplication.create({
       data: {
         jobPost: { connect: { id: jobId } },
         employeeProfile: { connect: { id: profile.id } }
       }
     });
+    
+    // Create notification for the employer
+    await createNotification({
+      userId: job.userId,
+      message: `New application received from ${profile.name} for "${job.title}"`,
+      type: "JOB",
+      jobPostId: jobId,
+    });
+
+    // Create notification for the applicant
+    await createNotification({
+      userId: userId,
+      message: `Your application for "${job.title}" has been submitted successfully`,
+      type: "INFO",
+      jobPostId: jobId,
+    });
+
     console.log(application);
     return NextResponse.json({ message: "Application submitted successfully", application }, { status: 200 });
   } catch (error) {

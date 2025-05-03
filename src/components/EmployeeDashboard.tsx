@@ -40,7 +40,7 @@ interface EmployeeProfileProps {
   applications?: Application[]
 }
 
-export default function EmployeeProfilePage({ user, applications = [] }: EmployeeProfileProps) {
+export default function EmployeeDashboard({ user, applications = [] }: EmployeeProfileProps) {
   const [open, setOpen] = useState(false)
   const [app, setApp] = useState<Application[]>(applications)
   const [selectedApplication, setSelectedApplication] = useState<Application | null>(null)
@@ -194,7 +194,7 @@ export default function EmployeeProfilePage({ user, applications = [] }: Employe
           <DialogHeader className="flex flex-row items-center justify-between">
             <DialogTitle className="text-xl font-bold">Job Details</DialogTitle>
             <Button variant="ghost" size="icon" onClick={() => setJobDetailsOpen(false)} className="h-8 w-8">
-              <X className="h-4 w-4" />
+              {/* <X className="h-4 w-4" /> */}
             </Button>
           </DialogHeader>
 
@@ -296,6 +296,32 @@ interface ApplicationCardProps {
 }
 
 function ApplicationCard({ application, index, onClick }: ApplicationCardProps) {
+  // Function to determine badge color based on status
+  const getStatusBadgeStyles = (status: string) => {
+    switch (status.toLowerCase()) {
+      case "applied":
+        return "bg-blue-50 text-blue-700 border-blue-200 hover:bg-blue-100"
+      case "reviewing":
+      case "under review":
+        return "bg-yellow-50 text-yellow-700 border-yellow-200 hover:bg-yellow-100"
+      case "interview":
+      case "interviewing":
+        return "bg-purple-50 text-purple-700 border-purple-200 hover:bg-purple-100"
+      case "hired":
+      case "accepted":
+        return "bg-green-50 text-green-700 border-green-200 hover:bg-green-100"
+      case "rejected":
+        return "bg-red-50 text-red-700 border-red-200 hover:bg-red-100"
+      default:
+        return "bg-gray-50 text-gray-700 border-gray-200 hover:bg-gray-100"
+    }
+  }
+
+  // Function to format status for display
+  const formatStatus = (status: string) => {
+    return status.charAt(0).toUpperCase() + status.slice(1).toLowerCase()
+  }
+
   return (
     <motion.div
       initial={{ opacity: 0, y: 20 }}
@@ -303,7 +329,18 @@ function ApplicationCard({ application, index, onClick }: ApplicationCardProps) 
       transition={{ duration: 0.3, delay: index * 0.05 }}
     >
       <Card
-        className="bg-white shadow hover:shadow-md transition cursor-pointer border-l-4 border-l-green-500 hover:bg-gray-50"
+        className={`bg-white shadow hover:shadow-md transition cursor-pointer border-l-4 ${
+          application.status.toLowerCase() === "hired" || application.status.toLowerCase() === "accepted"
+            ? "border-l-green-500"
+            : application.status.toLowerCase() === "rejected"
+              ? "border-l-red-500"
+              : application.status.toLowerCase() === "interview" || application.status.toLowerCase() === "interviewing"
+                ? "border-l-purple-500"
+                : application.status.toLowerCase() === "reviewing" ||
+                    application.status.toLowerCase() === "under review"
+                  ? "border-l-yellow-500"
+                  : "border-l-blue-500"
+        } hover:bg-gray-50`}
         onClick={onClick}
       >
         <CardHeader className="pb-2">
@@ -315,8 +352,8 @@ function ApplicationCard({ application, index, onClick }: ApplicationCardProps) 
                 {application.jobPost.company}
               </CardDescription>
             </div>
-            <Badge variant="outline" className="bg-yellow-50 text-yellow-700 border-yellow-200 hover:bg-yellow-100">
-              Under Review
+            <Badge variant="outline" className={getStatusBadgeStyles(application.status)}>
+              {formatStatus(application.status)}
             </Badge>
           </div>
         </CardHeader>
