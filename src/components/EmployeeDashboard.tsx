@@ -114,7 +114,7 @@ export default function EmployeeDashboard({ user, applications = [] }: EmployeeP
             <h3 className="text-sm font-medium text-gray-500 uppercase tracking-wider">Quick Links</h3>
             <div className="space-y-1">
               <Link
-                href="/jobs"
+                href="/categories"
                 className="flex items-center justify-between p-3 rounded-md hover:bg-green-50 text-gray-700 hover:text-green-700 transition-colors"
               >
                 <div className="flex items-center gap-2">
@@ -123,7 +123,7 @@ export default function EmployeeDashboard({ user, applications = [] }: EmployeeP
                 </div>
                 <ChevronRight className="h-4 w-4 text-gray-400" />
               </Link>
-              <Link
+              {/* <Link
                 href="/saved-jobs"
                 className="flex items-center justify-between p-3 rounded-md hover:bg-green-50 text-gray-700 hover:text-green-700 transition-colors"
               >
@@ -132,9 +132,9 @@ export default function EmployeeDashboard({ user, applications = [] }: EmployeeP
                   <span>Saved Jobs</span>
                 </div>
                 <ChevronRight className="h-4 w-4 text-gray-400" />
-              </Link>
+              </Link> */}
               <Link
-                href="/resume"
+                href="/profile"
                 className="flex items-center justify-between p-3 rounded-md hover:bg-green-50 text-gray-700 hover:text-green-700 transition-colors"
               >
                 <div className="flex items-center gap-2">
