@@ -199,7 +199,7 @@ export default function NavbarComponent({ user }: { user?: any }) {
               <Search className="h-5 w-5" />
               <span className="sr-only">Search</span>
             </Button>
-            <Link href="/contact" className="hidden md:block">
+            <Link href="/contact-us" className="hidden md:block">
               <Button
                 variant="ghost"
                 size="icon"
@@ -208,7 +208,7 @@ export default function NavbarComponent({ user }: { user?: any }) {
                 <span className="ml-1 text-sm font-medium">Contact</span>
               </Button>
             </Link>
-            <Link href="/about" className="hidden md:block">
+            <Link href="/about-us" className="hidden md:block">
               <Button
                 variant="ghost"
                 className="text-[#404145] hover:text-[#1dbf73] hover:bg-transparent text-sm font-medium"
@@ -434,7 +434,7 @@ function MobileSidebar({
           </div>
 
           <Link
-            href="/about"
+            href="/about-us"
             className="flex items-center gap-3 px-3 py-2.5 rounded-md text-[#404145] hover:bg-[#f5f5f5] hover:text-[#1dbf73] transition-colors"
             onClick={onClose}
           >
@@ -443,7 +443,7 @@ function MobileSidebar({
           </Link>
 
           <Link
-            href="/contact"
+            href="/contact-us"
             className="flex items-center gap-3 px-3 py-2.5 rounded-md text-[#404145] hover:bg-[#f5f5f5] hover:text-[#1dbf73] transition-colors"
             onClick={onClose}
           >

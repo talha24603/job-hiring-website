@@ -13,7 +13,7 @@ export async function GET(request: NextRequest) {
     where: {
       OR: [
         { title: { contains: query, mode: "insensitive" } },
-        { details: { contains: query, mode: "insensitive" } },
+        
         { company: { contains: query, mode: "insensitive" } },
         { location: { contains: query, mode: "insensitive" } },
         { jobType: { contains: query, mode: "insensitive" } },

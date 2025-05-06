@@ -94,7 +94,7 @@ export default function EmployeeDashboard({ user, applications = [] }: EmployeeP
               variant="outline"
               size="sm"
               className="mt-2 gap-2 border-green-200 hover:bg-green-50 hover:text-green-700 transition-colors"
-              onClick={() => router.push("/edit-profile")}
+              onClick={() => router.push("/profile")}
             >
               <Pencil size={14} />
               Edit Profile

@@ -393,9 +393,7 @@ function ApplicationCard({ application, index }: ApplicationCardProps) {
             >
               View Resume
             </Button>
-            <Button variant="outline" size="sm" className="text-xs">
-              View ID
-            </Button>
+            
           </div>
 
           <div>
