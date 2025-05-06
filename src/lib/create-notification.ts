@@ -1,4 +1,8 @@
 import prisma from "@/prismaClient"
+import axios from "axios"
+
+// Socket server URL
+const SOCKET_SERVER_URL = process.env.NEXT_PUBLIC_SOCKET_URL || "http://localhost:4000"
 
 interface CreateNotificationParams {
   userId: string
@@ -8,7 +12,7 @@ interface CreateNotificationParams {
 }
 
 /**
- * Creates a new notification for a user
+ * Creates a new notification for a user and emits socket event
  *
  * @param params Notification parameters
  * @returns The created notification
@@ -17,6 +21,7 @@ export async function createNotification(params: CreateNotificationParams) {
   const { userId, message, type, jobPostId } = params
 
   try {
+    // 1. Save to database using Prisma
     const notification = await prisma.notification.create({
       data: {
         userId,
@@ -25,6 +30,21 @@ export async function createNotification(params: CreateNotificationParams) {
         jobPostId,
       },
     })
+
+    // 2. Emit socket event through API
+    try {
+      await axios.post(`${SOCKET_SERVER_URL}/api/notifications`, {
+        userId,
+        message,
+        type,
+        jobPostId,
+        id: notification.id,
+        createdAt: notification.createdAt,
+      })
+    } catch (socketError) {
+      console.error("Error sending socket notification:", socketError)
+      // Continue execution even if socket fails - the database notification still exists
+    }
 
     return notification
   } catch (error) {
