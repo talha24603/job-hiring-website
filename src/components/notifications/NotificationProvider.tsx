@@ -92,7 +92,7 @@ export const NotificationProvider: React.FC<{ children: React.ReactNode }> = ({ 
         // Optionally show a toast or play a sound
         try {
           // Play notification sound if available
-          const audio = new Audio("/notification-sound.mp3")
+          const audio = new Audio("/notification1.mp3")
           audio.play().catch((e) => console.log("Audio play prevented:", e))
 
           // You can also show a browser notification

@@ -72,8 +72,8 @@ model JobApplication {
   employeeProfileId String
   jobPostId         String
   status            String          @default("PENDING")
-  employeeProfile   EmployeeProfile @relation(fields: [employeeProfileId], references: [id])
-  jobPost           JobPost         @relation(fields: [jobPostId], references: [id])
+  employeeProfile   EmployeeProfile @relation(fields: [employeeProfileId], references: [id], onDelete: Cascade)
+  jobPost           JobPost         @relation(fields: [jobPostId], references: [id], onDelete: Cascade)
 
   @@unique([employeeProfileId, jobPostId])
 }

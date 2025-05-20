@@ -51,6 +51,8 @@ export default function NavbarComponent({ user }: { user?: any }) {
   const [scrolled, setScrolled] = useState(false)
   const [mobileCategoriesOpen, setMobileCategoriesOpen] = useState(false)
   const [sidebarOpen, setSidebarOpen] = useState(false)
+  const [userMenuOpen, setUserMenuOpen] = useState(false)
+
 
   // Handle scroll effect for navbar
   useEffect(() => {
@@ -244,11 +246,11 @@ export default function NavbarComponent({ user }: { user?: any }) {
 
             {/* User Avatar Dropdown (only if logged in) */}
             {user && (
-              <DropdownMenu>
+                <DropdownMenu open={userMenuOpen} onOpenChange={setUserMenuOpen}>
                 <DropdownMenuTrigger asChild>
                   <Button variant="ghost" className="relative h-10 w-10 rounded-full p-0">
                     <Avatar className="h-10 w-10 border-2 border-[#1dbf73]">
-                      <AvatarImage src={user.image } alt="User Profile" />
+                      <AvatarImage src={user.image} alt="User Profile" />
                       <AvatarFallback className="bg-[#e4f9f0] text-[#1dbf73]">
                         {user.name?.charAt(0).toUpperCase() || "U"}
                       </AvatarFallback>
@@ -263,34 +265,18 @@ export default function NavbarComponent({ user }: { user?: any }) {
                     </div>
                   </DropdownMenuLabel>
                   <DropdownMenuSeparator />
-                  <DropdownMenuItem>
-                    <Link
-                      href={user.role === "employee" ? "/employee-dashboard" : "/employer-dashboard"}
-                      className="flex w-full"
-                    >
+                  <DropdownMenuItem onClick={() => setUserMenuOpen(false)}>
+                    <Link href={user.role === "employee" ? "/employee-dashboard" : "/employer-dashboard"} className="w-full">
                       Dashboard
                     </Link>
                   </DropdownMenuItem>
-                  <DropdownMenuItem>
-                    <Link href="/notifications" className="flex w-full">
+                  <DropdownMenuItem onClick={() => setUserMenuOpen(false)}>
+                    <Link href="/notifications" className="w-full">
                       Notifications
                     </Link>
                   </DropdownMenuItem>
-                  {/* <DropdownMenuItem>
-                    <Link href="/" className="flex w-full">
-                      Billing
-                    </Link>
-                  </DropdownMenuItem>
-                  <DropdownMenuItem>
-                    <Link href="/" className="flex w-full">
-                      Team
-                    </Link>
-                  </DropdownMenuItem> */}
                   <DropdownMenuSeparator />
-                  <DropdownMenuItem
-                    className="text-red-600 focus:text-red-600 cursor-pointer"
-                    onClick={() => signOut()}
-                  >
+                  <DropdownMenuItem className="text-red-600" onClick={() => { setUserMenuOpen(false); signOut(); }}>
                     Logout
                   </DropdownMenuItem>
                 </DropdownMenuContent>
@@ -477,22 +463,7 @@ function MobileSidebar({
                 <User className="h-5 w-5 text-gray-500" />
                 <span>Dasboard</span>
               </Link>
-              {/* <Link
-                href="/"
-                className="flex items-center gap-3 px-3 py-2.5 rounded-md text-[#404145] hover:bg-[#f5f5f5] hover:text-[#1dbf73] transition-colors"
-                onClick={onClose}
-              >
-                <CreditCard className="h-5 w-5 text-gray-500" />
-                <span>Billing</span>
-              </Link>
-              <Link
-                href="/"
-                className="flex items-center gap-3 px-3 py-2.5 rounded-md text-[#404145] hover:bg-[#f5f5f5] hover:text-[#1dbf73] transition-colors"
-                onClick={onClose}
-              >
-                <Users className="h-5 w-5 text-gray-500" />
-                <span>Team</span>
-              </Link> */}
+             
             </div>
           </>
         )}

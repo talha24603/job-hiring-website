@@ -8,7 +8,7 @@ import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Separator } from "@/components/ui/separator"
 import { toast } from "sonner"
-import { Facebook, Twitter, Linkedin, Instagram, Mail, Phone, MapPin, ArrowRight, Send, Briefcase } from "lucide-react"
+import { Facebook, Twitter, Linkedin, Instagram, Mail, Phone, MapPin, ArrowRight, Send } from "lucide-react"
 
 export default function Footer() {
   const [email, setEmail] = useState("")
@@ -30,7 +30,6 @@ export default function Footer() {
           {/* Brand Column */}
           <div className="space-y-4">
             <div className="flex items-center gap-2">
-              <Briefcase className="h-6 w-6 text-green-400" />
               <h3 className="text-2xl font-bold text-white">CareerHub</h3>
             </div>
             <p className="text-gray-400 leading-relaxed">

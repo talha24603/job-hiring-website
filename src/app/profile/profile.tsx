@@ -9,7 +9,7 @@ import { Worker, Viewer } from "@react-pdf-viewer/core"
 import "@react-pdf-viewer/core/lib/styles/index.css"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent } from "@/components/ui/card"
-import { Download, FileText } from "lucide-react"
+import {  FileText } from "lucide-react"
 import { useSession } from "next-auth/react"
 
 interface Data {

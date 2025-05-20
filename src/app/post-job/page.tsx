@@ -127,7 +127,7 @@ export default function JobPostForm({ dataToEdit }: JobPostFormProps) {
 
       if (response.status === 200) {
         toast.success(dataToEdit ? "Job updated successfully!" : "Job posted successfully!");
-        router.push("/employer-profile");
+        router.push("/employer-dashboard");
       } else {
         toast.error(response.data?.message || "Failed to save job posting");
       }

@@ -3,7 +3,6 @@ import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import { Toaster } from "sonner";
 import AuthProvider from "@/context/authprovider";
-import { SocketProvider } from "../context/socket";
 import Footer from "@/components/Footer";
 import NavBar from "@/components/navbar/navbarServer";
 import { NotificationProvider } from "@/components/notifications/NotificationProvider";
@@ -41,7 +40,7 @@ export default function RootLayout({
         className={`${geistSans.variable} ${geistMono.variable} antialiased min-h-screen`}
       >
         <AuthProvider>
-          <SocketProvider>
+          
             <NotificationProvider>
             <NavBar  />
             
@@ -52,7 +51,6 @@ export default function RootLayout({
 
             <Footer />
             </NotificationProvider>
-          </SocketProvider>
 
           <Toaster />
         </AuthProvider>
