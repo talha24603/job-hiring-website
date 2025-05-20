@@ -1,37 +1,41 @@
 // src/app/api/delete-job/[id]/route.ts
-import { NextRequest, NextResponse } from 'next/server'
-import prisma from '@/prismaClient'
+
+import { NextRequest, NextResponse } from "next/server";
+import prisma from "@/prismaClient";  // or: import { PrismaClient } from "@prisma/client"; const prisma = new PrismaClient();
 
 export async function DELETE(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ): Promise<NextResponse> {
-  try {
-    const { id } = params;
+  // 1) Unwrap the incoming params promise
+  const { id } = await params;
 
-    // Verify the job exists first
+  try {
+    // 2) Verify the job exists
     const job = await prisma.jobPost.findUnique({
       where: { id },
     });
 
     if (!job) {
       return NextResponse.json(
-        { error: 'Job not found' },
+        { error: "Job not found" },
         { status: 404 }
       );
     }
 
+    // 3) Delete the job
     const deletedJob = await prisma.jobPost.delete({
       where: { id },
     });
 
+    // 4) Return the deleted record
     return NextResponse.json(
       { success: true, data: deletedJob },
       { status: 200 }
     );
-  } catch (error: any) {
+  } catch (err: any) {
     return NextResponse.json(
-      { error: 'Failed to delete job', details: error.message },
+      { error: "Failed to delete job", details: err.message },
       { status: 500 }
     );
   }

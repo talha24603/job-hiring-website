@@ -1,13 +1,16 @@
+// src/app/job-applications/[id]/page.tsx
 import JobApplications from "@/components/JobApplications"
 import prisma from "@/prismaClient"
 import type { Application } from "@/types/application"
 
 interface PageProps {
-  params: { id: string }
+  // params now comes in as a Promise<{ id: string }>
+  params: Promise<{ id: string }>
 }
 
 export default async function Page({ params }: PageProps) {
-  const { id } = params
+  // unwrap the params promise
+  const { id } = await params
 
   // Fetch all applications for the given job post
   const rawApplications = await prisma.jobApplication.findMany({
