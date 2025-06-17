@@ -26,6 +26,18 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ message: 'Profile not found' });
   }
 
+  // Check if user has already applied for this job
+  const existingApplication = await prisma.jobApplication.findFirst({
+    where: {
+      jobPostId: jobId,
+      employeeProfileId: profile.id
+    }
+  });
+
+  if (existingApplication) {
+    return NextResponse.json({ message: "You have already applied for this job" }, { status: 400 });
+  }
+
   // Define the fields that must be non-empty. Adjust this list based on your business rules.
   const requiredFields: { field: keyof typeof profile; label: string }[] = [
     { field: 'name', label: 'Name' },

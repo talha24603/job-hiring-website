@@ -35,6 +35,9 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
   debug: true,
   session: { strategy: "jwt" },
   pages: { signIn: "/login" },
+  jwt: {
+    maxAge: 60 * 60, // Token valid for 1 hour
+  },
 
   callbacks: {
     signIn: async ({ user, account }) => {
@@ -70,6 +73,8 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
           token.role       = dbUser.role;       // now "UNASSIGNED" or whatever
           token.isVerified = dbUser.isVerified;
           token.image      = dbUser.image;
+
+
         }
       }
       return token;

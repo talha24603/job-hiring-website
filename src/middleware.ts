@@ -7,6 +7,7 @@
   interface Token {
     
       role?: string;
+      exp?: number;
       // ... other user properties
     
   }
@@ -18,7 +19,11 @@
     // const session = await auth();
     // const token = session?.user as { role?: string } | null; // Adjust the type according to your user object structure
     const url = request.nextUrl;
-
+    const now = Math.floor(Date.now() / 1000);
+    if (token?.exp && token.exp < now) {
+      // Token has expired → redirect to login
+      return NextResponse.redirect(new URL('/login', request.url));
+    }
     // Redirect UNASSIGNED roles to select role
     if (token?.role === "UNASSIGNED" && url.pathname !== '/select-role') {
       return NextResponse.redirect(new URL('/select-role', request.url))
@@ -55,7 +60,7 @@
 
     // Protect routes from unauthenticated users
     if (
-      !token &&
+      !token && 
       (
         url.pathname === '/select-role' ||
         url.pathname === '/post-job' ||
