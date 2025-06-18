@@ -2,7 +2,7 @@ import prisma from "@/prismaClient"
 import axios from "axios"
 
 // Socket server URL
-const SOCKET_SERVER_URL = process.env.NEXT_PUBLIC_SOCKET_URL || "http://localhost:4000"
+const SOCKET_SERVER_URL = process.env.NEXT_PUBLIC_SOCKET_URL || "http://localhost:8000"
 
 interface CreateNotificationParams {
   userId: string

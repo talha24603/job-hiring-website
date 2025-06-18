@@ -56,7 +56,7 @@ export const useSocket = (userId?: string) => {
   useEffect(() => {
     // Initialize the socket
     const socketInstance = initializeSocket()
-
+ 
     // Update connection status
     const handleConnect = () => {
       setIsConnected(true)

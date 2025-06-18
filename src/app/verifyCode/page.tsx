@@ -26,7 +26,8 @@ export default function VerifyCode() {
     const response = await codeVerificationHandler(code, email);
 
     if (response?.success) {
-      router.push("/");
+      router.push("/login");
+      toast.success("Code verified successfully");
     } else {
       toast.error("Code doesn't match");
     }
