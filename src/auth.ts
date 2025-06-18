@@ -26,6 +26,7 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
         if (!user) throw new Error("invalid email or password")
         const isMatch = await compare(credentials.password, user.password || "")
         if (!isMatch) throw new Error("incorrect password")
+        if (!user.isVerified) throw new Error("Account not verified. Please verify your email before logging in.")
         return {  name: user.name, email: user.email, isVerified: user.isVerified, role: user.role }
       },
     }),
