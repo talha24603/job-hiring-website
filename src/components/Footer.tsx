@@ -74,11 +74,11 @@ export default function Footer() {
             <ul className="space-y-3">
               {[
                 { name: "Home", href: "/" },
-                { name: "Find Jobs", href: "/jobs" },
-                { name: "Post a Job", href: "/post-job" },
+                { name: "Find Jobs", href: "/categories" },
+                // { name: "Post a Job", href: "/post-job" },
                 { name: "About Us", href: "/about-us" },
                 { name: "Contact", href: "/contact-us" },
-                { name: "Privacy Policy", href: "/privacy" },
+                // { name: "Privacy Policy", href: "/privacy" },
               ].map((link) => (
                 <li key={link.name}>
                   <Link

@@ -53,6 +53,9 @@ export default function ApplyJob({ job }: ShowPostedJobProps) {
         router.push('/login');
         return;
       }
+      
+      
+
       const backendMessage = error.response?.data?.message || error.message || 'Unknown error';
       toast.error(`Error applying for job: ${backendMessage}`);
     }

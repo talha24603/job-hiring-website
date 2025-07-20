@@ -21,32 +21,37 @@ export default function SignIn() {
   const [email, setEmail] = useState("")
   const [password, setPassword] = useState("")
 
-  const handleSubmit = async (event: React.FormEvent) => {
-    event.preventDefault()
-    setLoading(true)
+ const handleSubmit = async (event: React.FormEvent) => {
+  event.preventDefault();
+  setLoading(true);
 
-    try {
-      const result = await signIn("credentials", {
-        email,
-        password,
-        redirect: false,
-      })
+  try {
+    const result = await signIn("credentials", {
+      redirect: false,
+      email,
+      password,
+    });
 
-      console.log("Sign in response:", result)
-
-      if (!result?.ok) {
-        toast.error("Invalid email or password")
-      } else {
-        toast.success("Login successful!")
-        router.push("/")
-        setTimeout(() => window.location.reload(), 500) // Ensure session updates
-      }
-    } catch (error) {
-      toast.error("An error occurred during sign in")
-    } finally {
-      setLoading(false)
+    console.log("Sign in response:", result);
+    if (!result || result.error) {
+      throw new Error(result?.error || "Sign in failed");
     }
+
+    if (result?.ok) {
+      toast.success("Login successful!");
+      router.push("/");
+      setTimeout(() => window.location.reload(), 500); // Optional
+    } else {
+      toast.error("Invalid email or password");
+    }
+  } catch (error) {
+    console.error("Sign in error:", error);
+    toast.error("Invalid email or password");
+  } finally {
+    setLoading(false);
   }
+};
+
 
   return (
     <div className="flex justify-center min-h-screen items-center bg-gradient-to-b from-white to-green-50">

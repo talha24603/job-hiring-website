@@ -223,8 +223,8 @@ export default function SearchedJobs({ jobs }: SearchedJobsProps) {
                       <span>{job.location || "Remote"}</span>
                     </div>
                     <div className="flex items-center text-gray-600">
-                      <DollarSign className="h-3.5 w-3.5 mr-1.5" />
-                      <span>{formatSalary(job.salary)}</span>
+                       <DollarSign className="h-3.5 w-3.5 mr-1.5" />
+                      <span>{job.salary}</span>
                     </div>
                     <div className="flex items-center text-gray-600">
                       <Clock className="h-3.5 w-3.5 mr-1.5" />
@@ -310,7 +310,7 @@ export default function SearchedJobs({ jobs }: SearchedJobsProps) {
                 </Badge>
                 <Badge variant="secondary" className="bg-gray-100 text-gray-800 flex items-center gap-1.5 px-3 py-1">
                   <DollarSign className="h-3.5 w-3.5" />
-                  {formatSalary(selectedJob.salary)}
+                  {selectedJob.salary}
                 </Badge>
                 <Badge variant="secondary" className="bg-gray-100 text-gray-800 flex items-center gap-1.5 px-3 py-1">
                   <Clock className="h-3.5 w-3.5" />
