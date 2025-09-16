@@ -35,6 +35,7 @@ import {
   FileText,
 } from "lucide-react";
 import axios from "axios";
+import { Value } from "@radix-ui/react-select";
 
 // Dynamically import the JoditEditor with SSR disabled
 const JoditEditor = dynamic(() => import("jodit-react"), { ssr: false });
@@ -153,6 +154,7 @@ export default function JobPostForm({ dataToEdit }: JobPostFormProps) {
     { value: "database", label: "Database Administrator" },
     { value: "cloud", label: "Cloud Engineer" },
     { value: "ux-ui-designer", label: "UX/UI Designer" },
+    { value: 'hr-manager', label:'HR Manager'},
     { value: "other", label: "Other" },
   ];
 
