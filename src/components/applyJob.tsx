@@ -130,7 +130,7 @@ export default function ApplyJob({ job }: ShowPostedJobProps) {
         {/* Salary and Job Type */}
         <div className="px-6 py-4 border-b">
           <div className="flex flex-col md:flex-row justify-between items-center">
-            <div className="text-gray-700 font-semibold text-xl">${job.salary}</div>
+            <div className="text-gray-700 font-semibold text-xl">{job.salary}</div>
             <div>
               <span className="px-4 py-1 bg-blue-100 text-blue-800 rounded-full text-sm">
                 {job.jobType}
